@@ -19,11 +19,15 @@ def register():
     if not login or not password:
         return "fail"
     cur = db.cursor()
-    query = "SELECT * FROM Employee inner join loginemp on Employee.id=loginemp.ide where login = %s and password = %s"
+    query = "SELECT * FROM Client inner join loginclient on Client.id=loginclient.idc where login = %s and password = %s;"
     cur.execute(query, (login, password))
     result = cur.fetchone()
     print(result)
-    return render_template("succesful.html")
+    if result is None:
+        return "You typed wrong login or password"
+    else:
+        return render_template("succesful.html")
+    db.close()
 
 
 if __name__ == "__main__":
