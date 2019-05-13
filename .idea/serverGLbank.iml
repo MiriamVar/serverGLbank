@@ -11,6 +11,7 @@
     <option name="TEMPLATE_FOLDERS">
       <list>
         <option value="$MODULE_DIR$/src/templates" />
+        <option value="$MODULE_DIR$/src/static" />
       </list>
     </option>
   </component>

@@ -12,7 +12,7 @@ def index():  # whoami bude default
     return render_template("index.html", )  # uz mam konkretnu stranku svoju, ak prijma parameter tak /?name=Mim
 
 
-@app.route("/register", methods=["POST"])
+@app.route("/login", methods=["POST"])
 def register():
     login = request.form.get("name")
     password = request.form.get("pass")
@@ -60,7 +60,7 @@ def register():
                     # "Your IB is unblocked"
                     # overuje sa ucet
                     cur = db.cursor()
-                    queryClient = "SELECT * FROM Client inner join loginclient on Client.id=loginclient.idc where login = %s and password = %s;"
+                    queryClient = "SELECT * FROM client inner join loginclient on client.id=loginclient.idc where login = %s and password = %s;"
                     cur.execute(queryClient, (login, password))
                     user = cur.fetchone()
                     print(user)
@@ -82,4 +82,4 @@ def register():
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
