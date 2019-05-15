@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 import mysql.connector
+import secrets
 
 app = Flask(__name__)  # spravi z tohto suboru web aplikaciu
 
@@ -12,10 +13,18 @@ def index():  # whoami bude default
     return render_template("index.html", )  # uz mam konkretnu stranku svoju, ak prijma parameter tak /?name=Mim
 
 
+class UserToken:
+    def __init__(self, clientID, clientToken):
+        self.clientId = clientID
+        self.clientToken = clientToken
+
+
 @app.route("/login", methods=["POST"])
 def register():
     login = request.form.get("name")
     password = request.form.get("pass")
+    tokens = []
+
     if not login or not password:
         return "fail"
 
@@ -38,6 +47,7 @@ def register():
         records = cur2.fetchall()
         print(records)
         if not records:
+            # insert do db - right
             cur4 = db.cursor()
             queryWrongLP = "insert into loginhistory (idl,success) values (%s,%s)"
             insert = cur4.execute(queryWrongLP, (idClient, 1))
@@ -51,7 +61,7 @@ def register():
                 print(row[2])
                 success.append(row[2])
 
-            # ak posledny zaznam nie je null
+            # if last record is not null
             if success[0] is not None:
                 # success ci sa == 1 alebo sa da zretazit ??
                 if success[0] == 1 and success[1] == 1 and success[2] == 1:
@@ -65,7 +75,7 @@ def register():
                     user = cur.fetchone()
                     print(user)
                     if user is None:
-                        # treba vlozit zapis do db
+                        # insert do db - wrong
                         cur4 = db.cursor()
                         queryWrongLP = "insert into loginhistory (idl,success) values (%s,%s)"
                         insert = cur4.execute(queryWrongLP, (idClient, 0))
@@ -73,6 +83,23 @@ def register():
                         db.commit()
                         return "You typed wrong password"
                     else:
+                        # insert do db - right
+                        cur4 = db.cursor()
+                        queryWrongLP = "insert into loginhistory (idl,success) values (%s,%s)"
+                        insert = cur4.execute(queryWrongLP, (idClient, 1))
+                        print(insert)
+                        db.commit()
+
+                        # generate token
+                        token = secrets.token_urlsafe()
+                        print("Token: "+token)
+
+                        tokens.append(UserToken(idClient, token))
+                        # print(UserToken.clientId)
+                        # print(UserToken.clientToken)
+
+                        print("clienta by malo vypisat: "+tokens[0])
+
                         return render_template("succesful.html")
 
             else:
