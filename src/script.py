@@ -13,7 +13,7 @@ def index():  # whoami bude default
     return render_template("index.html", )  # uz mam konkretnu stranku svoju, ak prijma parameter tak /?name=Mim
 
 
-class UserToken:
+class UserToken(object):
     def __init__(self, clientID, clientToken):
         self.clientId = clientID
         self.clientToken = clientToken
@@ -53,7 +53,7 @@ def register():
             insert = cur4.execute(queryWrongLP, (idClient, 1))
             print(insert)
             db.commit()
-            return render_template("succesful.html")
+            return render_template("userinfo.html")
         else:
             success = []
             for row in records:
@@ -94,13 +94,20 @@ def register():
                         token = secrets.token_urlsafe()
                         print("Token: "+token)
 
-                        tokens.append(UserToken(idClient, token))
-                        # print(UserToken.clientId)
-                        # print(UserToken.clientToken)
+                        # client = UserToken()
+                        # client.clientId = idClient
+                        # client.clientToken = token
+                        #
+                        # tokens.append(client)
+                        #
+                        # print("User id: %s" + client.clientId)
+                        # print("User token: %s" + client.clientToken)
+                        # # print(UserToken.clientId)
+                        # # print(UserToken.clientToken)
+                        #
+                        # print("clienta by malo vypisat: "+tokens[0].clientId + " " +tokens[0].clientToken)
 
-                        print("clienta by malo vypisat: "+tokens[0])
-
-                        return render_template("succesful.html")
+                        return render_template("userinfo.html")
 
             else:
                 return "Your IB ib blocked by Bank Employee"
