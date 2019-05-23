@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, json
 import mysql.connector
 import secrets
 
@@ -19,15 +19,19 @@ class UserToken(object):
         self.clientToken = clientToken
 
 
-login = request.form.get("name")
-password = request.form.get("pass")
+login = ''
+password = ''
 tokens = []
 idClient = 0
 accNum = 0
+json_user = []
+client = ''
 
 
 @app.route("/login", methods=["POST"])
 def register():
+    login = request.form.get("name")
+    password = request.form.get("pass")
     if not login or not password:
         return "fail"
 
@@ -54,8 +58,6 @@ def register():
             cur4 = db.cursor()
             queryWrongLP = "insert into loginhistory (idl,success) values (%s,%s)"
             insert = cur4.execute(queryWrongLP, (idClient, 1))
-            print(insert)
-            jsonify(insert)
             db.commit()
             return render_template("userinfo.html")
         else:
@@ -79,13 +81,16 @@ def register():
                                   "on client.id=loginclient.idc where login = %s and password = %s;"
                     cur.execute(queryClient, (login, password))
                     user = cur.fetchone()
+                    print("User")
                     print(user)
+                    json_user.append({'id': user[0], 'name': user[1], 'surname': user[2], 'email': user[3]})
+                    print("Userko")
+                    print(json.dumps({'user': json_user}))
                     if user is None:
                         # insert do db - wrong
                         cur4 = db.cursor()
                         queryWrongLP = "insert into loginhistory (idl,success) values (%s,%s)"
                         insert = cur4.execute(queryWrongLP, (idClient, 0))
-                        print(insert)
                         db.commit()
                         return "You typed wrong password"
                     else:
@@ -93,26 +98,19 @@ def register():
                         cur4 = db.cursor()
                         queryWrongLP = "insert into loginhistory (idl,success) values (%s,%s)"
                         insert = cur4.execute(queryWrongLP, (idClient, 1))
-                        print(insert)
-                        jsonify(insert)
                         db.commit()
 
                         # generate token
                         token = secrets.token_urlsafe()
-                        print("Token: "+token)
 
-                        # client = UserToken()
-                        # client.clientId = idClient
-                        # client.clientToken = token
-                        #
-                        # tokens.append(client)
-                        #
-                        # print("User id: %s" + client.clientId)
-                        # print("User token: %s" + client.clientToken)
-                        # # print(UserToken.clientId)
-                        # # print(UserToken.clientToken)
-                        #
-                        # print("clienta by malo vypisat: "+tokens[0].clientId + " " +tokens[0].clientToken)
+                        client = UserToken(clientID=idClient, clientToken=token)
+                        tokens.append(client)
+
+                        print(client.clientId)
+                        print(client.clientToken)
+                        print("clienta by malo vypisat")
+                        print(tokens[0].clientId)
+                        print(tokens[0].clientToken)
 
                         return render_template("userinfo.html")
 
@@ -124,43 +122,46 @@ def register():
 
 @app.route("/userinfo", methods=["POST"])
 def userDetails():
-    name 
-    token
+    name = json_user
+    print(name)
+    token = tokens[0].clientToken
+    print(token)
 
     cur1 = db.cursor()
     queryUser = 'select * from loginclient ' \
                 'inner join client on loginclient.idc = client.id where loginclient.login like %s'
     infoUser = cur1.execute(queryUser, (login,))
+    print("info o userovi .. druha route")
     print(infoUser)
     db.commit()
 
-
-@app.route("/accounts", methods=["POST"])
-def accounts():
-    name
-    idc
-    token
-
-    cur1 = db.cursor()
-    queryAccounts = 'select * from account ' \
-                'where idc = %s'
-    infoAccounts = cur1.execute(queryAccounts, (idClient,))
-    print(infoAccounts)
-    db.commit()
-
-
-@app.route("/accDetails", methods=["POST"])
-def accounts():
-    name
-    accNum
-    token
-
-    cur1 = db.cursor()
-    queryAccountsDetails = 'select * from account ' \
-                'where accNum = %s'
-    detailsAccounts = cur1.execute(queryAccountsDetails, (accNum,))
-    print(detailsAccounts)
-    db.commit()
+#
+# @app.route("/accounts", methods=["POST"])
+# def accounts():
+#     name
+#     idc
+#     token
+#
+#     cur1 = db.cursor()
+#     queryAccounts = 'select * from account ' \
+#                 'where idc = %s'
+#     infoAccounts = cur1.execute(queryAccounts, (idClient,))
+#     print(infoAccounts)
+#     db.commit()
+#
+#
+# @app.route("/accDetails", methods=["POST"])
+# def accounts():
+#     name
+#     accNum
+#     token
+#
+#     cur1 = db.cursor()
+#     queryAccountsDetails = 'select * from account ' \
+#                 'where accNum = %s'
+#     detailsAccounts = cur1.execute(queryAccountsDetails, (accNum,))
+#     print(detailsAccounts)
+#     db.commit()
 
 
 if __name__ == "__main__":
