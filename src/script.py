@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 import mysql.connector
 import secrets
 
@@ -19,12 +19,15 @@ class UserToken(object):
         self.clientToken = clientToken
 
 
+login = request.form.get("name")
+password = request.form.get("pass")
+tokens = []
+idClient = 0
+accNum = 0
+
+
 @app.route("/login", methods=["POST"])
 def register():
-    login = request.form.get("name")
-    password = request.form.get("pass")
-    tokens = []
-
     if not login or not password:
         return "fail"
 
@@ -52,6 +55,7 @@ def register():
             queryWrongLP = "insert into loginhistory (idl,success) values (%s,%s)"
             insert = cur4.execute(queryWrongLP, (idClient, 1))
             print(insert)
+            jsonify(insert)
             db.commit()
             return render_template("userinfo.html")
         else:
@@ -70,7 +74,9 @@ def register():
                     # "Your IB is unblocked"
                     # overuje sa ucet
                     cur = db.cursor()
-                    queryClient = "SELECT * FROM client inner join loginclient on client.id=loginclient.idc where login = %s and password = %s;"
+                    queryClient = "SELECT * FROM client " \
+                                  "inner join loginclient " \
+                                  "on client.id=loginclient.idc where login = %s and password = %s;"
                     cur.execute(queryClient, (login, password))
                     user = cur.fetchone()
                     print(user)
@@ -88,6 +94,7 @@ def register():
                         queryWrongLP = "insert into loginhistory (idl,success) values (%s,%s)"
                         insert = cur4.execute(queryWrongLP, (idClient, 1))
                         print(insert)
+                        jsonify(insert)
                         db.commit()
 
                         # generate token
@@ -113,6 +120,47 @@ def register():
                 return "Your IB ib blocked by Bank Employee"
 
     db.close()
+
+
+@app.route("/userinfo", methods=["POST"])
+def userDetails():
+    name 
+    token
+
+    cur1 = db.cursor()
+    queryUser = 'select * from loginclient ' \
+                'inner join client on loginclient.idc = client.id where loginclient.login like %s'
+    infoUser = cur1.execute(queryUser, (login,))
+    print(infoUser)
+    db.commit()
+
+
+@app.route("/accounts", methods=["POST"])
+def accounts():
+    name
+    idc
+    token
+
+    cur1 = db.cursor()
+    queryAccounts = 'select * from account ' \
+                'where idc = %s'
+    infoAccounts = cur1.execute(queryAccounts, (idClient,))
+    print(infoAccounts)
+    db.commit()
+
+
+@app.route("/accDetails", methods=["POST"])
+def accounts():
+    name
+    accNum
+    token
+
+    cur1 = db.cursor()
+    queryAccountsDetails = 'select * from account ' \
+                'where accNum = %s'
+    detailsAccounts = cur1.execute(queryAccountsDetails, (accNum,))
+    print(detailsAccounts)
+    db.commit()
 
 
 if __name__ == "__main__":
