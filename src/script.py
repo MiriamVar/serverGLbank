@@ -215,6 +215,7 @@ def accounts():
         return "wrong credentials"
 
 
+@app.route("/accountsinfo", methods=["POST"])
 def accountsInfo():
     element = ''
     accNumber = ''
@@ -303,6 +304,72 @@ def cardsinfo():
         return "OK"
     else:
         return "wrong credentials"
+
+
+@app.route("/cardtrans", methods=["POST"])
+def cardTrans():
+    element = ''
+    success = False
+    idcard = ''
+
+    x = json.loads(request.data)
+    print(x["token"])
+    for element in tokens:
+        if element.clientToken == x["token"] and element.clientId == x["id"]:
+            for swap in cards:
+                idcard = swap.cardId
+                print(idcard)
+            success = True
+            break
+    if success is True:
+        print("dostanem sa tu")
+        cur1 = db.cursor()
+        queryCards = 'select * from cardtrans where idCard = %s'
+        cur1.execute(queryCards, (idcard,))
+        infoCard = cur1.fetchone()
+        print(infoCard)
+
+        print("info o karte... siedma  route")
+        db.commit()
+        return "OK"
+    else:
+        return "wrong credentials"
+
+
+@app.route("/changepassword", methods=["POST"])
+def changePass():
+    oldPass = request.form.get("oldPassword")
+    newPass = request.form.get("newPassword")
+
+    login = ''
+    element = ''
+    success = False
+
+    x = json.loads(request.data)
+    print(x["token"])
+    for element in tokens:
+        if element.clientToken == x["token"] and element.clientId == x["id"]:
+            login = UserToken.clientLogin
+            success = True
+            break
+    if success is True:
+        print("dostanem sa tu")
+        cur1 = db.cursor()
+        queryPass = 'update loginclient  set password = %s where login = %s and password = %s'
+        cur1.execute(queryPass, (newPass, login, oldPass ))
+        infoCard = cur1.fetchone()
+        print(infoCard)
+
+        print("info o karte... siedma  route")
+        db.commit()
+        return "OK"
+    else:
+        return "wrong credentials"
+
+
+@app.route("/blockcard", methods=["POST"])
+def blockingcard():
+
 
 
 if __name__ == "__main__":
