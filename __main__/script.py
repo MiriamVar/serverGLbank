@@ -1,9 +1,13 @@
 from flask import Flask, render_template, request, jsonify, json
 import mysql.connector
 import secrets
+import hashlib
+
+#from database import MyDb
+
 
 app = Flask(__name__)  # spravi z tohto suboru web aplikaciu
-
+#mydb = MyDb.databaza
 db = mysql.connector.connect(host='itsovy.sk', port='3306', database='glbank', user='glbank', password='password')
 
 
@@ -37,6 +41,14 @@ class Card(object):
         self.active = active
 
 
+class UserInfo(object):
+    def __init__(self, login, fname, lname, mail):
+        self.login = login
+        self.fname = fname
+        self.lname = lname
+        self.mail = mail
+
+
 tokens = []
 idClient = 0
 json_user = []
@@ -48,28 +60,35 @@ cards = []
 @app.route("/login", methods=["POST"])
 def register():
     login = request.form.get("name")
-    password = request.form.get("pass")
+    passswap = request.form.get("pass")
+    password = hashlib.md5(passswap.encode()).hexdigest()
+    print(password)
     if not login or not password:
-        return "fail"
+        return render_template("loginError.html", usernameErr="", passwordErr="", blockedErr="Wrong username or password.")
 
     # overenie ci taky client podla loginu existuje
     cur1 = db.cursor()
     queryLogin = "select idc from loginclient where login = %s;"
     cur1.execute(queryLogin, (login,))
     userLogin = cur1.fetchone()
+    #userLogin = mydb.Login(self=mydb, login=login)
+
+    # userLogin = Login(login)
     print(userLogin)
-    idClient = userLogin[0]
-    print(idClient)
     if userLogin is None:
         # user neexistuje
-        return "Wrong login"
+        return render_template("loginError.html", usernameErr="Wrong username.", passwordErr="", blockedErr="")
     else:
+        idClient = userLogin[0]
+        print(idClient)
+
         # overuje blokovania uctu
         cur2 = db.cursor()
         queryBlockIB = "select * from loginhistory where idl = %s order by UNIX_TIMESTAMP(logDate) desc limit 3;"
         cur2.execute(queryBlockIB, (idClient,))
         records = cur2.fetchall()
         print(records)
+
         if not records:
             # insert do db - right
             cur4 = db.cursor()
@@ -83,7 +102,7 @@ def register():
             client = UserToken(clientId=idClient, clientToken=token, clientLogin=login)
             tokens.append(client)
 
-            return render_template("userinfo.html")
+            return render_template("userinfo.html", token=token, userID=idClient)
         else:
             success = []
             for row in records:
@@ -95,7 +114,7 @@ def register():
             if success[0] is not None:
                 # success ci sa == 1 alebo sa da zretazit ??
                 if success[0] == 1 and success[1] == 1 and success[2] == 1:
-                    return "Your IB is blocked"
+                    return render_template("loginError.html", usernameErr="", passwordErr="", blockedErr="Your IB is blocked.")
                 else:
                     # "Your IB is unblocked"
                     # overuje sa ucet
@@ -105,19 +124,23 @@ def register():
                                   "on client.id=loginclient.idc where login = %s and password = %s;"
                     cur.execute(queryClient, (login, password))
                     user = cur.fetchone()
+
                     print("User")
                     print(user)
-                    json_user.append({'id': user[0], 'name': user[1], 'surname': user[2], 'email': user[3]})
-                    print("Userko")
-                    print(json.dumps({'user': json_user}))
+
                     if user is None:
                         # insert do db - wrong
                         cur4 = db.cursor()
                         queryWrongLP = "insert into loginhistory (idl,success) values (%s,%s)"
                         insert = cur4.execute(queryWrongLP, (idClient, 0))
                         db.commit()
-                        return "You typed wrong password"
+
+                        return render_template("loginError.html", usernameErr="", passwordErr="Wrong Password.", blockedErr="")
                     else:
+                        json_user.append({'id': user[0], 'name': user[1], 'surname': user[2], 'email': user[3]})
+                        print("Userko")
+                        print(json.dumps({'user': json_user}))
+
                         # insert do db - right
                         cur4 = db.cursor()
                         queryWrongLP = "insert into loginhistory (idl,success) values (%s,%s)"
@@ -136,26 +159,17 @@ def register():
                         print(tokens[0].clientId)
                         print(tokens[0].clientToken)
 
-                        return render_template("userinfo.html")
+                        return render_template("userinfo.html", token=token, userID=idClient)
 
             else:
-                return "Your IB ib blocked by Bank Employee"
+                return render_template("loginError.html", usernameErr="", passwordErr="",
+                                       blockedErr="Your IB is blocked by Bank Employee.")
 
 
 @app.route("/userinfo", methods=["POST"])
-def userDetails():
-    login = ""
-    success = False
-
-    x = json.loads(request.data)
-    print(x["token"])
-    for element in tokens:
-        if element.clientToken == x["token"] and element.clientId == x["id"]:
-            login = element.clientLogin
-            print(login)
-            success = True
-            break
-    if success is True:
+def userDetails(token, id):
+    login = getLogin(token, id)
+    if login is not None:
         print("dostanem sa tu")
         cur1 = db.cursor()
         queryUser = 'select * from loginclient ' \
@@ -165,7 +179,7 @@ def userDetails():
         print("info o userovi .. druha route")
         print(infoUser)
         db.commit()
-        return "OK"
+        return jsonify({"login": infoUser[2], "fname": infoUser[5], "lname": infoUser[6], "mail": infoUser[7]})
     else:
         return "wrong credentials"
 
@@ -186,21 +200,12 @@ def logout():
 
 
 @app.route("/accounts", methods=["POST"])
-def accounts():
-    element = ''
-    success = False
-
-    x = json.loads(request.data)
-    print(x["token"])
-    for element in tokens:
-        if element.clientToken == x["token"] and element.clientId == x["id"]:
-            success = True
-            break
-    if success is True:
-        print("dostanem sa tu")
+def accounts(token, id):
+    if isValidTokenAndId(token, id) is True:
+        print("dostanem sa tuuuu")
         cur1 = db.cursor()
         queryAccounts = 'select * from account where idc = %s'
-        cur1.execute(queryAccounts, (element.clientId,))
+        cur1.execute(queryAccounts, (id,))
         infoAccounts = cur1.fetchall()
         for row in infoAccounts:
             account = Account(accId=row[0], clientId=row[1], accNum=row[2], accAmount=row[3])
@@ -209,32 +214,19 @@ def accounts():
 
         print("info o accountoch... stvrta  route")
         db.commit()
-        accountsInfo()
         return "OK"
     else:
         return "wrong credentials"
 
 
 @app.route("/accountsinfo", methods=["POST"])
-def accountsInfo():
-    element = ''
-    accNumber = ''
-    success = False
+def accountsInfo(token, id, accnum):
 
-    x = json.loads(request.data)
-    print(x["token"])
-    for element in tokens:
-        if element.clientToken == x["token"] and element.clientId == x["id"]:
-            for swap in accountiky:
-                accNumber = swap.accNum
-                print(accNumber)
-            success = True
-            break
-    if success is True:
+    if isValidTokenAndId(token, id) is True:
         print("dostanem sa tu")
         cur1 = db.cursor()
         queryAccountsDetails = 'select * from account where accNum = %s'
-        cur1.execute(queryAccountsDetails, (accNumber,))
+        cur1.execute(queryAccountsDetails, (accnum,))
         detailsAccount = cur1.fetchone(0)
         print("info o accountoch... piata  route")
         print(detailsAccount)
@@ -367,9 +359,26 @@ def changePass():
         return "wrong credentials"
 
 
-@app.route("/blockcard", methods=["POST"])
-def blockingcard():
+# @app.route("/blockcard", methods=["POST"])
+# def blockingcard():
 
+
+def isValidTokenAndId(token, id):
+    print(token)
+    for element in tokens:
+        if element.clientToken == token and element.clientId == id:
+            return True
+    return False
+
+
+def getLogin(token, id):
+    print(token)
+    for element in tokens:
+        if element.clientToken == token and element.clientId == id:
+            login = element.clientLogin
+            print(login)
+            return login
+    return None
 
 
 if __name__ == "__main__":
