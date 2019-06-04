@@ -167,7 +167,15 @@ def register():
 
 
 @app.route("/userinfo", methods=["POST"])
-def userDetails(token, id):
+def userDetails():
+    token = ""
+    id = ""
+    if request.is_json:
+        content = request.get_json()
+        token = content["token"]
+        id = content["id"]
+    else:
+        return jsonify({"status": "wrong request"})
     login = getLogin(token, id)
     if login is not None:
         print("dostanem sa tu")
@@ -200,7 +208,15 @@ def logout():
 
 
 @app.route("/accounts", methods=["POST"])
-def accounts(token, id):
+def accounts():
+    token = ""
+    id = ""
+    if request.is_json:
+        content = request.get_json()
+        token = content["token"]
+        id = content["id"]
+    else:
+        return jsonify({"status": "wrong request"})
     if isValidTokenAndId(token, id) is True:
         print("dostanem sa tuuuu")
         cur1 = db.cursor()
@@ -214,15 +230,26 @@ def accounts(token, id):
 
         print("info o accountoch... stvrta  route")
         db.commit()
+
         return "OK"
     else:
         return "wrong credentials"
 
 
 @app.route("/accountsinfo", methods=["POST"])
-def accountsInfo(token, id, accnum):
+def accountsInfo():
+    token = ""
+    id = ""
+    if request.is_json:
+        content = request.get_json()
+        token = content["token"]
+        id = content["id"]
+    else:
+        return jsonify({"status": "wrong request"})
 
-    if isValidTokenAndId(token, id) is True:
+    accnum = getAccnum(token, id)
+
+    if accnum is not None:
         print("dostanem sa tu")
         cur1 = db.cursor()
         queryAccountsDetails = 'select * from account where accNum = %s'
@@ -238,19 +265,17 @@ def accountsInfo(token, id, accnum):
 
 @app.route("/cards", methods=["POST"])
 def cards():
-    element = ''
-    success = False
+    token = ""
+    id = ""
+    if request.is_json:
+        content = request.get_json()
+        token = content["token"]
+        id = content["id"]
+    else:
+        return jsonify({"status": "wrong request"})
 
-    x = json.loads(request.data)
-    print(x["token"])
-    for element in tokens:
-        if element.clientToken == x["token"] and element.clientId == x["id"]:
-            for swap in accountiky:
-                accId = swap.accId
-                print(accId)
-            success = True
-            break
-    if success is True:
+    accId = getAccid(token, id)
+    if accId is not None:
         print("dostanem sa tu")
         cur1 = db.cursor()
         queryCards = 'select * from card where ida = %s'
@@ -333,18 +358,16 @@ def changePass():
     oldPass = request.form.get("oldPassword")
     newPass = request.form.get("newPassword")
 
-    login = ''
-    element = ''
-    success = False
-
-    x = json.loads(request.data)
-    print(x["token"])
-    for element in tokens:
-        if element.clientToken == x["token"] and element.clientId == x["id"]:
-            login = UserToken.clientLogin
-            success = True
-            break
-    if success is True:
+    token = ""
+    id = ""
+    if request.is_json:
+        content = request.get_json()
+        token = content["token"]
+        id = content["id"]
+    else:
+        return jsonify({"status": "wrong request"})
+    login = getLogin(token, id)
+    if login is not None:
         print("dostanem sa tu")
         cur1 = db.cursor()
         queryPass = 'update loginclient  set password = %s where login = %s and password = %s'
@@ -379,6 +402,24 @@ def getLogin(token, id):
             print(login)
             return login
     return None
+
+
+def getAccid(token, id):
+    for element in tokens:
+        if element.clientToken == token and element.clientId == id:
+            for swap in accountiky:
+                accId = swap.accId
+                print(accId)
+                return accId
+
+
+def getAccnum (token, id):
+    for element in tokens:
+        if element.clientToken == token and element.clientId == id:
+            for swap in accountiky:
+                accnum = swap.accNum
+                print(accnum)
+                return accnum
 
 
 if __name__ == "__main__":

@@ -5,7 +5,7 @@ let accounts = {};
 
 $(document).ready(function(){
   userinfo();
-  accounts();
+//  accountes();
 
 
 });
@@ -25,43 +25,43 @@ function userinfo(){
   });
 }
 
-function accounts(){
-    let data = {token : window.tokenSecret, id : window.userID};
-    data = JSON.stringify(data);
-    console.log(data);
-    $.ajax({
-      type: 'POST',
-      url: "/accounts",
-      data: data,
-      contentType:"application/json; charset=utf-8",
-        dataType:"json",
-      success: function(resultData) {
-        accounts = resultData;
-        console.log(resultData);
-        if(resultData.length > 0){
-            let accnum = resultData[0].accNum;
-            accinfo(accnum);
-        }
-        else{
-            $("#accNum").text("You don't have any accounts.");
-        }
-      }
-  });
-}
+//function accountes(){
+//    let data = {token : window.tokenSecret, id : window.userID};
+//    data = JSON.stringify(data);
+//    console.log(data);
+//    $.ajax({
+//      type: 'POST',
+//      url: "/accounts",
+//      data: data,
+//      contentType:"application/json; charset=utf-8",
+//        dataType:"json",
+//      success: function(resultData) {
+//        accounts = resultData;
+//        console.log(resultData);
+//        if(resultData.length > 0){
+//            let accnum = resultData[0].accNum;
+//            accinfo(accnum);
+//        }
+//        else{
+//            $("#accNum").text("You don't have any accounts.");
+//        }
+//      }
+//  });
+//}
 
-function accinfo(accnum){
-    let data = {token : window.tokenSecret, id : window.userID,};
-    data = JSON.stringify(data);
-    console.log(data);
-    $.ajax({
-      type: 'POST',
-      url: "/accountsinfo",
-      data: data,
-      contentType:"application/json; charset=utf-8",
-        dataType:"json",
-      success: function(resultData) { accData = resultData; console.log(resultData);}
-  });
-}
+//function accinfo(accnum){
+//    let data = {token : window.tokenSecret, id : window.userID,};
+//    data = JSON.stringify(data);
+//    console.log(data);
+//    $.ajax({
+//      type: 'POST',
+//      url: "/accountsinfo",
+//      data: data,
+//      contentType:"application/json; charset=utf-8",
+//        dataType:"json",
+//      success: function(resultData) { accData = resultData; console.log(resultData);}
+//  });
+//}
 
 
 
