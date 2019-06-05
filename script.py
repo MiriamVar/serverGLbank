@@ -1,14 +1,11 @@
 from flask import Flask, render_template, request, jsonify, json
-import mysql.connector
 import secrets
 import hashlib
-
-#from database import MyDb
+from database.MyDb import Databaza
 
 
 app = Flask(__name__)  # spravi z tohto suboru web aplikaciu
-#mydb = MyDb.databaza
-db = mysql.connector.connect(host='itsovy.sk', port='3306', database='glbank', user='glbank', password='password')
+db = Databaza()
 
 
 @app.route("/")  # pripajanie na web
@@ -67,13 +64,8 @@ def register():
         return render_template("loginError.html", usernameErr="", passwordErr="", blockedErr="Wrong username or password.")
 
     # overenie ci taky client podla loginu existuje
-    cur1 = db.cursor()
-    queryLogin = "select idc from loginclient where login = %s;"
-    cur1.execute(queryLogin, (login,))
-    userLogin = cur1.fetchone()
-    #userLogin = mydb.Login(self=mydb, login=login)
+    userLogin = db.Login(login=login)
 
-    # userLogin = Login(login)
     print(userLogin)
     if userLogin is None:
         # user neexistuje
@@ -83,18 +75,11 @@ def register():
         print(idClient)
 
         # overuje blokovania uctu
-        cur2 = db.cursor()
-        queryBlockIB = "select * from loginhistory where idl = %s order by UNIX_TIMESTAMP(logDate) desc limit 3;"
-        cur2.execute(queryBlockIB, (idClient,))
-        records = cur2.fetchall()
+        records = db.AccountIsBlocked(idClient=idClient)
         print(records)
-
         if not records:
             # insert do db - right
-            cur4 = db.cursor()
-            queryWrongLP = "insert into loginhistory (idl,success) values (%s,%s)"
-            insert = cur4.execute(queryWrongLP, (idClient, 1))
-            db.commit()
+            db.InsertToDb(idClient=idClient)
 
             # generate token
             token = secrets.token_urlsafe()
@@ -117,24 +102,15 @@ def register():
                     return render_template("loginError.html", usernameErr="", passwordErr="", blockedErr="Your IB is blocked.")
                 else:
                     # "Your IB is unblocked"
-                    # overuje sa ucet
-                    cur = db.cursor()
-                    queryClient = "SELECT * FROM client " \
-                                  "inner join loginclient " \
-                                  "on client.id=loginclient.idc where login = %s and password = %s;"
-                    cur.execute(queryClient, (login, password))
-                    user = cur.fetchone()
 
+                    # overuje sa ucet
+                    user = db.verification(login=login, password=password)
                     print("User")
                     print(user)
 
                     if user is None:
                         # insert do db - wrong
-                        cur4 = db.cursor()
-                        queryWrongLP = "insert into loginhistory (idl,success) values (%s,%s)"
-                        insert = cur4.execute(queryWrongLP, (idClient, 0))
-                        db.commit()
-
+                        db.wrongInsert(idClient=idClient)
                         return render_template("loginError.html", usernameErr="", passwordErr="Wrong Password.", blockedErr="")
                     else:
                         json_user.append({'id': user[0], 'name': user[1], 'surname': user[2], 'email': user[3]})
@@ -142,10 +118,7 @@ def register():
                         print(json.dumps({'user': json_user}))
 
                         # insert do db - right
-                        cur4 = db.cursor()
-                        queryWrongLP = "insert into loginhistory (idl,success) values (%s,%s)"
-                        insert = cur4.execute(queryWrongLP, (idClient, 1))
-                        db.commit()
+                        db.InsertToDb(idClient=idClient)
 
                         # generate token
                         token = secrets.token_urlsafe()
@@ -179,14 +152,9 @@ def userDetails():
     login = getLogin(token, id)
     if login is not None:
         print("dostanem sa tu")
-        cur1 = db.cursor()
-        queryUser = 'select * from loginclient ' \
-                    'inner join client on loginclient.idc = client.id where loginclient.login like %s'
-        cur1.execute(queryUser, (login,))
-        infoUser = cur1.fetchone()
+        infoUser = db.getUserInfo(login=login)
         print("info o userovi .. druha route")
         print(infoUser)
-        db.commit()
         return jsonify({"login": infoUser[2], "fname": infoUser[5], "lname": infoUser[6], "mail": infoUser[7]})
     else:
         return "wrong credentials"
@@ -219,18 +187,13 @@ def accounts():
         return jsonify({"status": "wrong request"})
     if isValidTokenAndId(token, id) is True:
         print("dostanem sa tuuuu")
-        cur1 = db.cursor()
-        queryAccounts = 'select * from account where idc = %s'
-        cur1.execute(queryAccounts, (id,))
-        infoAccounts = cur1.fetchall()
+        infoAccounts = db.getAccounts(id=id)
         for row in infoAccounts:
             account = Account(accId=row[0], clientId=row[1], accNum=row[2], accAmount=row[3])
             accountiky.append(account)
             print(row)
 
         print("info o accountoch... stvrta  route")
-        db.commit()
-
         return "OK"
     else:
         return "wrong credentials"
@@ -251,13 +214,9 @@ def accountsInfo():
 
     if accnum is not None:
         print("dostanem sa tu")
-        cur1 = db.cursor()
-        queryAccountsDetails = 'select * from account where accNum = %s'
-        cur1.execute(queryAccountsDetails, (accnum,))
-        detailsAccount = cur1.fetchone(0)
+        detailsAccount = db.getOneAccount(accnum=accnum)
         print("info o accountoch... piata  route")
         print(detailsAccount)
-        db.commit()
         return "OK"
     else:
         return "wrong credentials"
@@ -277,18 +236,13 @@ def cards():
     accId = getAccid(token, id)
     if accId is not None:
         print("dostanem sa tu")
-        cur1 = db.cursor()
-        queryCards = 'select * from card where ida = %s'
-        cur1.execute(queryCards, (accId,))
-        infoCards = cur1.fetchall()
-
+        infoCards = db.getCards(accId=accId)
         for row in infoCards:
             card = Card(cardId=row[0], accId=row[1], pin=row[2], expirem=row[3], expirey=row[4], active=row[5])
             cards.append(card)
             print(row)
 
         print("info o kartach... siesta  route")
-        db.commit()
         return "OK"
     else:
         return "wrong credentials"
@@ -310,76 +264,70 @@ def cardsinfo():
             break
     if success is True:
         print("dostanem sa tu")
-        cur1 = db.cursor()
-        queryCards = 'select * from card where id = %s'
-        cur1.execute(queryCards, (idcard,))
-        infoCard = cur1.fetchone()
+        infoCard = db.getOneCard(idcard=idcard)
         print(infoCard)
-
         print("info o karte... siedma  route")
-        db.commit()
         return "OK"
     else:
         return "wrong credentials"
 
 
-@app.route("/cardtrans", methods=["POST"])
-def cardTrans():
-    element = ''
-    success = False
-    idcard = ''
-
-    x = json.loads(request.data)
-    print(x["token"])
-    for element in tokens:
-        if element.clientToken == x["token"] and element.clientId == x["id"]:
-            for swap in cards:
-                idcard = swap.cardId
-                print(idcard)
-            success = True
-            break
-    if success is True:
-        print("dostanem sa tu")
-        cur1 = db.cursor()
-        queryCards = 'select * from cardtrans where idCard = %s'
-        cur1.execute(queryCards, (idcard,))
-        infoCard = cur1.fetchone()
-        print(infoCard)
-
-        print("info o karte... siedma  route")
-        db.commit()
-        return "OK"
-    else:
-        return "wrong credentials"
-
-
-@app.route("/changepassword", methods=["POST"])
-def changePass():
-    oldPass = request.form.get("oldPassword")
-    newPass = request.form.get("newPassword")
-
-    token = ""
-    id = ""
-    if request.is_json:
-        content = request.get_json()
-        token = content["token"]
-        id = content["id"]
-    else:
-        return jsonify({"status": "wrong request"})
-    login = getLogin(token, id)
-    if login is not None:
-        print("dostanem sa tu")
-        cur1 = db.cursor()
-        queryPass = 'update loginclient  set password = %s where login = %s and password = %s'
-        cur1.execute(queryPass, (newPass, login, oldPass ))
-        infoCard = cur1.fetchone()
-        print(infoCard)
-
-        print("info o karte... siedma  route")
-        db.commit()
-        return "OK"
-    else:
-        return "wrong credentials"
+# @app.route("/cardtrans", methods=["POST"])
+# def cardTrans():
+#     element = ''
+#     success = False
+#     idcard = ''
+#
+#     x = json.loads(request.data)
+#     print(x["token"])
+#     for element in tokens:
+#         if element.clientToken == x["token"] and element.clientId == x["id"]:
+#             for swap in cards:
+#                 idcard = swap.cardId
+#                 print(idcard)
+#             success = True
+#             break
+#     if success is True:
+#         print("dostanem sa tu")
+#         cur1 = db.cursor()
+#         queryCards = 'select * from cardtrans where idCard = %s'
+#         cur1.execute(queryCards, (idcard,))
+#         infoCard = cur1.fetchone()
+#         print(infoCard)
+#
+#         print("info o karte... siedma  route")
+#         return "OK"
+#     else:
+#         return "wrong credentials"
+#
+#
+# @app.route("/changepassword", methods=["POST"])
+# def changePass():
+#     oldPass = request.form.get("oldPassword")
+#     newPass = request.form.get("newPassword")
+#
+#     token = ""
+#     id = ""
+#     if request.is_json:
+#         content = request.get_json()
+#         token = content["token"]
+#         id = content["id"]
+#     else:
+#         return jsonify({"status": "wrong request"})
+#     login = getLogin(token, id)
+#     if login is not None:
+#         print("dostanem sa tu")
+#         cur1 = db.cursor()
+#         queryPass = 'update loginclient  set password = %s where login = %s and password = %s'
+#         cur1.execute(queryPass, (newPass, login, oldPass ))
+#         infoCard = cur1.fetchone()
+#         print(infoCard)
+#
+#         print("info o karte... siedma  route")
+#         db.commit()
+#         return "OK"
+#     else:
+#         return "wrong credentials"
 
 
 # @app.route("/blockcard", methods=["POST"])
