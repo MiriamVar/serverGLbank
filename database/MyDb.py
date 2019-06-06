@@ -1,92 +1,163 @@
 import mysql.connector
+from mysql.connector.connection import MySQLConnection
+from mysql.connector import pooling
 
 from database.Config import dbConf
-
-db = mysql.connector.connect(host=dbConf["host"], port=dbConf["port"], database=dbConf["database"],
-                                  user=dbConf["user"], password=dbConf["password"])
 
 
 class Databaza(object):
 
+    def __init__(self):
+        self.connection_pool = mysql.connector.pooling.MySQLConnectionPool(
+            pool_name="pynative_pool", pool_size=5, pool_reset_session=True,
+            host=dbConf["host"], port=dbConf["port"], database=dbConf["database"],
+            user=dbConf["user"], password=dbConf["password"])
+
+    #
+    # def __getDb__(self):
+    #     if self.db.is_connected():
+    #         print("connected")
+    #         return
+    #     else:
+    #         self.db = self.__connect__()
+    #         return self.db
+    #
+    # def __connect__(self):
+    #     return mysql.connector.connect(host=dbConf["host"], port=dbConf["port"], database=dbConf["database"],
+    #
+    #                                   user=dbConf["user"], password=dbConf["password"])
+
+    connection_pool = mysql.connector.pooling.MySQLConnectionPool(
+        pool_name="pynative_pool", pool_size=5, pool_reset_session=True,
+        host=dbConf["host"], port=dbConf["port"], database=dbConf["database"],
+        user=dbConf["user"], password=dbConf["password"])
+
     def AccountIsBlocked(self, idClient):
-        cur2 = db.cursor()
-        queryBlockIB = "select * from loginhistory where idl = %s order by UNIX_TIMESTAMP(logDate) desc limit 3;"
-        cur2.execute(queryBlockIB, (idClient,))
-        records = cur2.fetchall()
-        return records
+        connection_object = self.connection_pool.get_connection()
+        if connection_object.is_connected():
+            db_info = connection_object.get_server_info()
+            print("Connected to MySQL database using connection pool ... MySQL Server version on ", db_info)
+            cur2 = connection_object.cursor()
+            queryBlockIB = "select * from loginhistory where idl = %s order by UNIX_TIMESTAMP(logDate) desc limit 3;"
+            cur2.execute(queryBlockIB, (idClient,))
+            records = cur2.fetchall()
+            if (connection_object.is_connected()):
+                cur2.close()
+                connection_object.close()
+                print("MySQL connection is closed")
+                return records
 
-
-    def Login(self, login):
+    def Login(self, login, ):
         # todo: add password
-        cur1 = db.cursor()
-        queryLogin = "select idc from loginclient where login = %s;"
-        cur1.execute(queryLogin, (login,))
-        userLogin = cur1.fetchone()
-        return userLogin
-
+        connection_object = self.connection_pool.get_connection()
+        if connection_object.is_connected():
+            db_info = connection_object.get_server_info()
+            print("Connected to MySQL database using connection pool ... MySQL Server version on ", db_info)
+            cur1 = connection_object.cursor()
+            queryLogin = "select idc from loginclient where login = %s;"
+            cur1.execute(queryLogin, (login,))
+            userLogin = cur1.fetchone()
+            if (connection_object.is_connected()):
+                cur1.close()
+                connection_object.close()
+                print("MySQL connection is closed")
+                return userLogin
 
     def InsertToDb(self, idClient):
-        cur4 = db.cursor()
-        queryWrongLP = "insert into loginhistory (idl,success) values (%s,%s)"
-        insert = cur4.execute(queryWrongLP, (idClient, 1))
-        db.commit()
-
+        connection_object = self.connection_pool.get_connection()
+        if connection_object.is_connected():
+            db_info = connection_object.get_server_info()
+            print("Connected to MySQL database using connection pool ... MySQL Server version on ", db_info)
+            # cur1 = self.__getDb__().cursor()
+            cur4 = connection_object.cursor()
+            queryWrongLP = "insert into loginhistory (idl,success) values (%s,%s)"
+            insert = cur4.execute(queryWrongLP, (idClient, 1))
+            if (connection_object.is_connected()):
+                cur4.close()
+                connection_object.close()
+                print("MySQL connection is closed")
 
     def verification(self, login, password):
-        cur = db.cursor()
-        queryClient = "SELECT * FROM client " \
-                      "inner join loginclient " \
-                      "on client.id=loginclient.idc where login = %s and password = %s;"
-        cur.execute(queryClient, (login, password))
-        user = cur.fetchone()
-        return user
+        connection_object = self.connection_pool.get_connection()
+        if connection_object.is_connected():
+            db_info = connection_object.get_server_info()
+            print("Connected to MySQL database using connection pool ... MySQL Server version on ",db_info)
+            cur = connection_object.cursor()
+            # cur1 = self.__getDb__().cursor()
+            queryClient = "SELECT * FROM client " \
+                          "inner join loginclient " \
+                          "on client.id=loginclient.idc where login = %s and password = %s;"
+            cur.execute(queryClient, (login, password))
+            user = cur.fetchone()
+            if (connection_object.is_connected()):
+                cur.close()
+                connection_object.close()
+                print("MySQL connection is closed")
+                return user
 
 
-    def wrongInsert(self, idClient):
-        cur4 = db.cursor()
-        queryWrongLP = "insert into loginhistory (idl,success) values (%s,%s)"
-        insert = cur4.execute(queryWrongLP, (idClient, 0))
-        db.commit()
-
+    # def wrongInsert(self, idClient):
+    #     cur4 = self.__getDb__().cursor()
+    #     queryWrongLP = "insert into loginhistory (idl,success) values (%s,%s)"
+    #     insert = cur4.execute(queryWrongLP, (idClient, 0))
+    #     self.__getDb__().commit()
+    #     cur4.close()
+    #     return
 
     def getUserInfo(self, login):
-        cur1 = db.cursor()
-        queryUser = 'select * from loginclient ' \
-                    'inner join client on loginclient.idc = client.id where loginclient.login like %s'
-        cur1.execute(queryUser, (login,))
-        infoUser = cur1.fetchone()
-        return infoUser
-
+        connection_object = self.connection_pool.get_connection()
+        if connection_object.is_connected():
+            db_info = connection_object.get_server_info()
+            print("Connected to MySQL database using connection pool ... MySQL Server version on ", db_info)
+            cur1 = connection_object.cursor()
+            # cur1 = self.__getDb__().cursor()
+            queryUser = 'select * from loginclient ' \
+                        'inner join client on loginclient.idc = client.id where loginclient.login like %s'
+            cur1.execute(queryUser, (login,))
+            infoUser = cur1.fetchone()
+            if (connection_object.is_connected()):
+                cur1.close()
+                connection_object.close()
+                print("MySQL connection is closed")
+                return infoUser
 
     def getAccounts(self, id):
-        cur1 = db.cursor()
-        queryAccounts = 'select * from account where idc = %s'
-        cur1.execute(queryAccounts, (id,))
-        infoAccounts = cur1.fetchall()
-        print("z db", infoAccounts)
-        return infoAccounts
+        connection_object = self.connection_pool.get_connection()
+        if connection_object.is_connected():
+            db_info = connection_object.get_server_info()
+            print("Connected to MySQL database using connection pool ... MySQL Server version on ", db_info)
+            cur1 = connection_object.cursor()
+            # cur1 = self.__getDb__().cursor()
+            queryAccounts = 'select * from account where idc = %s'
+            cur1.execute(queryAccounts, (id,))
+            infoAccounts = cur1.fetchall()
+            print("z db", infoAccounts)
+            if (connection_object.is_connected()):
+                cur1.close()
+                connection_object.close()
+                print("MySQL connection is closed")
+                return infoAccounts
 
-
-    def getOneAccount(self, accnum):
-        cur1 = db.cursor()
-        queryAccountsDetails = 'select * from account where accNum = %s'
-        cur1.execute(queryAccountsDetails, (accnum,))
-        detailsAccount = cur1.fetchone(0)
-        return detailsAccount
-
-
-    def getCards(self, accId):
-        cur1 = db.cursor()
-        queryCards = 'select * from card where ida = %s'
-        cur1.execute(queryCards, (accId,))
-        infoCards = cur1.fetchall()
-        return infoCards
-
-
-    def getOneCard(self, idcard):
-        cur1 = db.cursor()
-        queryCards = 'select * from card where id = %s'
-        cur1.execute(queryCards, (idcard,))
-        infoCard = cur1.fetchone()
-        return infoCard
-
+    # def getOneAccount(self, accnum):
+    #     cur1 = self.__getDb__().cursor()
+    #     queryAccountsDetails = 'select * from account where accNum = %s'
+    #     cur1.execute(queryAccountsDetails, (accnum,))
+    #     detailsAccount = cur1.fetchone(0)
+    #     cur1.close()
+    #     return detailsAccount
+    #
+    # def getCards(self, accId):
+    #     cur1 = self.__getDb__().cursor()
+    #     queryCards = 'select * from card where ida = %s'
+    #     cur1.execute(queryCards, (accId,))
+    #     infoCards = cur1.fetchall()
+    #     cur1.close()
+    #     return infoCards
+    #
+    # def getOneCard(self, idcard):
+    #     cur1 = self.__getDb__().cursor()
+    #     queryCards = 'select * from card where id = %s'
+    #     cur1.execute(queryCards, (idcard,))
+    #     infoCard = cur1.fetchone()
+    #     cur1.close()
+    #     return infoCard

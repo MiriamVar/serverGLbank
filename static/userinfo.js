@@ -69,7 +69,8 @@ function loadAccountes(){
 
 
 function fillUserData(){
-    $("#ownerName").text(userData.fname, userData.lname);
+    $("#ownerFname").text(userData.fname, );
+    $("#ownerLname").text(userData.lname);
 }
 
 function fillAccData(){
