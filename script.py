@@ -1,4 +1,6 @@
-from flask import Flask, render_template, request, jsonify, json
+from json import dumps
+
+from flask import Flask, render_template, request, jsonify, json, make_response
 import secrets
 import hashlib
 from database.MyDb import Databaza
@@ -188,13 +190,15 @@ def accounts():
     if isValidTokenAndId(token, id) is True:
         print("dostanem sa tuuuu")
         infoAccounts = db.getAccounts(id=id)
+        print(infoAccounts)
+
         for row in infoAccounts:
             account = Account(accId=row[0], clientId=row[1], accNum=row[2], accAmount=row[3])
             accountiky.append(account)
-            print(row)
+            print(account)
 
         print("info o accountoch... stvrta  route")
-        return "OK"
+        return make_response(dumps(accountiky))
     else:
         return "wrong credentials"
 

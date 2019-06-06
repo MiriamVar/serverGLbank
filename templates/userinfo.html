@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>GL Bank</title>
-    <link rel="stylesheet" type= "text/css" href="userinfo.css">
+    <link rel="stylesheet" type= "text/css" href="{{ url_for('static', filename='userinfo.css') }}">
     <script>
          var tokenSecret = "{{ token }}";
          var userID = {{ userID }};
@@ -22,7 +22,7 @@
         <div class="right">
          <div class="forAccIcon"></div>
          <div id="btnLogout" onclick="">Log out</div>
-        <div>
+        </div>
     </div>
 </header>
 

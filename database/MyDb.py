@@ -15,6 +15,7 @@ class Databaza(object):
         records = cur2.fetchall()
         return records
 
+
     def Login(self, login):
         # todo: add password
         cur1 = db.cursor()
@@ -23,11 +24,13 @@ class Databaza(object):
         userLogin = cur1.fetchone()
         return userLogin
 
+
     def InsertToDb(self, idClient):
         cur4 = db.cursor()
         queryWrongLP = "insert into loginhistory (idl,success) values (%s,%s)"
         insert = cur4.execute(queryWrongLP, (idClient, 1))
         db.commit()
+
 
     def verification(self, login, password):
         cur = db.cursor()
@@ -38,11 +41,13 @@ class Databaza(object):
         user = cur.fetchone()
         return user
 
+
     def wrongInsert(self, idClient):
         cur4 = db.cursor()
         queryWrongLP = "insert into loginhistory (idl,success) values (%s,%s)"
         insert = cur4.execute(queryWrongLP, (idClient, 0))
         db.commit()
+
 
     def getUserInfo(self, login):
         cur1 = db.cursor()
@@ -52,12 +57,15 @@ class Databaza(object):
         infoUser = cur1.fetchone()
         return infoUser
 
+
     def getAccounts(self, id):
         cur1 = db.cursor()
         queryAccounts = 'select * from account where idc = %s'
         cur1.execute(queryAccounts, (id,))
         infoAccounts = cur1.fetchall()
+        print("z db", infoAccounts)
         return infoAccounts
+
 
     def getOneAccount(self, accnum):
         cur1 = db.cursor()
@@ -66,6 +74,7 @@ class Databaza(object):
         detailsAccount = cur1.fetchone(0)
         return detailsAccount
 
+
     def getCards(self, accId):
         cur1 = db.cursor()
         queryCards = 'select * from card where ida = %s'
@@ -73,9 +82,11 @@ class Databaza(object):
         infoCards = cur1.fetchall()
         return infoCards
 
+
     def getOneCard(self, idcard):
         cur1 = db.cursor()
         queryCards = 'select * from card where id = %s'
         cur1.execute(queryCards, (idcard,))
         infoCard = cur1.fetchone()
         return infoCard
+
