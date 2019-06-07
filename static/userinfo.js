@@ -49,6 +49,16 @@ function loadAccountes(){
   });
 }
 
+//function logout(){
+//    $.ajax({
+//      type: 'POST',
+//      url: "/logout",
+//      contentType:"application/json; charset=utf-8",
+//        dataType:"json",
+//      success: function(resultData) {}
+//  });
+//}
+
 //function accinfo(accnum){
 //    let data = {token : window.tokenSecret, id : window.userID,};
 //    data = JSON.stringify(data);

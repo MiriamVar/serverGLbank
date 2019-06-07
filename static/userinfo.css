@@ -171,7 +171,14 @@ float:right;
   padding-left: 5px;
 }
 
-#ownerName{
+#ownerFname{
+  color: #6d6c6c;
+  padding-left: 10px;
+  font-size: 23px;
+  padding-right: 5px;
+}
+
+#ownerLname{
   color: #6d6c6c;
   padding-left: 10px;
   font-size: 23px;

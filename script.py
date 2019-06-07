@@ -174,7 +174,7 @@ def logout():
             break
         else:
             i += 1
-    return "OK"
+    return render_template("index.html")
 
 
 @app.route("/accounts", methods=["POST"])
@@ -197,8 +197,12 @@ def accounts():
             accountiky.append(account)
             print(account)
 
+        accounts2 = []
+        for acc in accountiky:
+            accounts2 += jsonify({"accId": account[0], "clientid": account[1], "accNum": account[2], "accAmount": account[3]})
+
         print("info o accountoch... stvrta  route")
-        return make_response(dumps(accountiky))
+        return accounts2
     else:
         return "wrong credentials"
 
