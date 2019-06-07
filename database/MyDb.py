@@ -138,13 +138,24 @@ class Databaza(object):
                 print("MySQL connection is closed")
                 return infoAccounts
 
-    # def getOneAccount(self, accnum):
-    #     cur1 = self.__getDb__().cursor()
-    #     queryAccountsDetails = 'select * from account where accNum = %s'
-    #     cur1.execute(queryAccountsDetails, (accnum,))
-    #     detailsAccount = cur1.fetchone(0)
-    #     cur1.close()
-    #     return detailsAccount
+    def getOneAccount(self, accnum):
+        connection_object = self.connection_pool.get_connection()
+        if connection_object.is_connected():
+            db_info = connection_object.get_server_info()
+            print("Connected to MySQL database using connection pool ... MySQL Server version on ", db_info)
+            cur1 = connection_object.cursor()
+            # cur1 = self.__getDb__().cursor()
+            queryAccountsDetails = 'select * from account where accNum = %s'
+            cur1.execute(queryAccountsDetails, (accnum,))
+            detailsAccount = cur1.fetchone()
+            print("z db", detailsAccount)
+            if (connection_object.is_connected()):
+                cur1.close()
+                connection_object.close()
+                print("MySQL connection is closed")
+                return detailsAccount
+
+
     #
     # def getCards(self, accId):
     #     cur1 = self.__getDb__().cursor()

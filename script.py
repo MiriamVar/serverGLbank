@@ -165,16 +165,21 @@ def userDetails():
 @app.route("/logout", methods=["POST"])
 def logout():
     i = 0
-
     x = json.loads(request.data)
     print(x["token"])
     for element in tokens:
         if element.clientToken == x["token"] and element.clientId == x["id"]:
             del tokens[i]
+            print("zmazalo token")
             break
         else:
             i += 1
-    return render_template("index.html")
+    return jsonify({"mess": "OK"})
+
+
+def toJSONaccounts(self):
+    return {"Account": {'accid': self.accId, 'clinetId': self.clientId,'accNum': self.accNum,
+                        'accAmount': self.accAmount}}
 
 
 @app.route("/accounts", methods=["POST"])
@@ -193,13 +198,13 @@ def accounts():
         print(infoAccounts)
 
         for row in infoAccounts:
-            account = Account(accId=row[0], clientId=row[1], accNum=row[2], accAmount=row[3])
-            accountiky.append(account)
-            print(account)
+            accountiky.append(row)
+            print(row)
 
-        accounts2 = []
-        for acc in accountiky:
-            accounts2 += jsonify({"accId": account[0], "clientid": account[1], "accNum": account[2], "accAmount": account[3]})
+        accounts2 = json.dumps(accountiky, separators=(',', ':'))
+        print("JSON acoounty")
+        for row in accounts2:
+            print(row)
 
         print("info o accountoch... stvrta  route")
         return accounts2
@@ -221,11 +226,12 @@ def accountsInfo():
     accnum = getAccnum(token, id)
 
     if accnum is not None:
-        print("dostanem sa tu")
+        print("dostanem sa tu intoooooooo")
         detailsAccount = db.getOneAccount(accnum=accnum)
         print("info o accountoch... piata  route")
         print(detailsAccount)
-        return "OK"
+        return jsonify({"accId": detailsAccount[0], "clientId": detailsAccount[1], "accNum": detailsAccount[2],
+                        "accAmount": detailsAccount[3]})
     else:
         return "wrong credentials"
 
@@ -373,7 +379,7 @@ def getAccnum (token, id):
     for element in tokens:
         if element.clientToken == token and element.clientId == id:
             for swap in accountiky:
-                accnum = swap.accNum
+                accnum = swap[2]
                 print(accnum)
                 return accnum
 

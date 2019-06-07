@@ -1,3 +1,3 @@
 
-dbConf = {"host": 'itsovy.sk', "port": '3306', "database": 'glbank', "user": 'glbank', "password": 'password'}
+dbConf = {"host": 'localhost', "port": '3306', "database": 'glbank', "user": 'root', "password": ''}
 

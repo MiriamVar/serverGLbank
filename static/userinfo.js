@@ -6,7 +6,7 @@ let accounts = {};
 $(document).ready(function(){
   userinfo();
   loadAccountes();
-
+  $("#btnLogout").click(function() {logout();});
 
 });
 
@@ -43,35 +43,55 @@ function loadAccountes(){
             accinfo(accnum);
         }
         else{
-            $("#accNum").text("You don't have any accounts.");
+            $("#accNumber").text("You don't have any accounts.");
         }
       }
   });
 }
 
-//function logout(){
-//    $.ajax({
-//      type: 'POST',
-//      url: "/logout",
-//      contentType:"application/json; charset=utf-8",
-//        dataType:"json",
-//      success: function(resultData) {}
-//  });
-//}
-
-//function accinfo(accnum){
-//    let data = {token : window.tokenSecret, id : window.userID,};
+//function accountsMenu(){
+//    let data = {token : window.tokenSecret, id : window.userID};
 //    data = JSON.stringify(data);
 //    console.log(data);
 //    $.ajax({
 //      type: 'POST',
-//      url: "/accountsinfo",
+//      url: "/accounts",
 //      data: data,
 //      contentType:"application/json; charset=utf-8",
 //        dataType:"json",
-//      success: function(resultData) { accData = resultData; console.log(resultData);}
+//      success: function(resultData) {accounts = resultData;console.log(resultData);
+//      }
 //  });
 //}
+
+
+function accinfo(accnum){
+    let data = {token : window.tokenSecret, id : window.userID,};
+    data = JSON.stringify(data);
+    console.log(data);
+    $.ajax({
+      type: 'POST',
+      url: "/accountsinfo",
+      data: data,
+      contentType:"application/json; charset=utf-8",
+        dataType:"json",
+      success: function(resultData) { accData = resultData; console.log(resultData); fillAccData();}
+  });
+}
+
+function logout(){
+    let data = {token : window.tokenSecret, id : window.userID,};
+    data = JSON.stringify(data);
+    console.log(data);
+    $.ajax({
+      type: 'POST',
+      url: "/logout",
+      data: data,
+      contentType:"application/json; charset=utf-8",
+        dataType:"json",
+      success: function(resultData) { window.tokenSecret = ""; window.userID=""; window.location.href="http://localhost:5000";}
+  });
+}
 
 
 
@@ -84,8 +104,13 @@ function fillUserData(){
 }
 
 function fillAccData(){
-    $("#accNum").text(accData.accnum);
+    $("#accNumber").text(accData.accNum);
+    $("#currBal").text(accData.accAmount);
 }
+
+//function fillAccNumbers(){
+//
+//}
 
 
 
