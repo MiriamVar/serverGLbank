@@ -196,3 +196,38 @@ float:right;
   padding-left: 3%;
   font-size: 25px;
 }
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+th {
+  background-color:#eae9e8;
+  padding: 1%;
+  color: #939393;
+}
+td{
+  padding: 1%;
+  text-align: center;
+}
+
+#userko{
+  width: 30%;
+  margin-left: 35%;
+  margin-right: 20%;
+  margin-top: 10%;
+}
+
+#tableUser, th, td{
+  background-color: white;
+  padding: 3%;
+}
+
+#pInfo{
+  color: #6d6c6c;
+  font-size: 20px;
+  background-color: #eae9e8;
+  padding: 2%;
+  margin-bottom: 0px;
+  text-align: center;
+}

@@ -144,7 +144,6 @@ class Databaza(object):
             db_info = connection_object.get_server_info()
             print("Connected to MySQL database using connection pool ... MySQL Server version on ", db_info)
             cur1 = connection_object.cursor()
-            # cur1 = self.__getDb__().cursor()
             queryAccountsDetails = 'select * from account where accNum = %s'
             cur1.execute(queryAccountsDetails, (accnum,))
             detailsAccount = cur1.fetchone()
@@ -155,20 +154,66 @@ class Databaza(object):
                 print("MySQL connection is closed")
                 return detailsAccount
 
+    def getCards(self, accId):
+        connection_object = self.connection_pool.get_connection()
+        if connection_object.is_connected():
+            db_info = connection_object.get_server_info()
+            print("Connected to MySQL database using connection pool ... MySQL Server version on ", db_info)
+            cur1 = connection_object.cursor()
+            queryCards = 'select * from card where ida = %s'
+            cur1.execute(queryCards, (accId,))
+            infoCards = cur1.fetchall()
+            print("z db", infoCards)
+            if (connection_object.is_connected()):
+                cur1.close()
+                connection_object.close()
+                print("MySQL connection is closed")
+                return infoCards
 
-    #
-    # def getCards(self, accId):
-    #     cur1 = self.__getDb__().cursor()
-    #     queryCards = 'select * from card where ida = %s'
-    #     cur1.execute(queryCards, (accId,))
-    #     infoCards = cur1.fetchall()
-    #     cur1.close()
-    #     return infoCards
-    #
-    # def getOneCard(self, idcard):
-    #     cur1 = self.__getDb__().cursor()
-    #     queryCards = 'select * from card where id = %s'
-    #     cur1.execute(queryCards, (idcard,))
-    #     infoCard = cur1.fetchone()
-    #     cur1.close()
-    #     return infoCard
+    def getOneCard(self, idcard):
+        connection_object = self.connection_pool.get_connection()
+        if connection_object.is_connected():
+            db_info = connection_object.get_server_info()
+            print("Connected to MySQL database using connection pool ... MySQL Server version on ", db_info)
+            cur1 = connection_object.cursor()
+            queryCards = 'select * from card where id = %s'
+            cur1.execute(queryCards, (idcard,))
+            infoCard = cur1.fetchone()
+            print("z db", infoCard)
+            if (connection_object.is_connected()):
+                cur1.close()
+                connection_object.close()
+                print("MySQL connection is closed")
+                return infoCard
+
+    def getCardTrans(self, idcard):
+        connection_object = self.connection_pool.get_connection()
+        if connection_object.is_connected():
+            db_info = connection_object.get_server_info()
+            print("Connected to MySQL database using connection pool ... MySQL Server version on ", db_info)
+            cur1 = connection_object.cursor()
+            queryCards = 'select * from cardtrans where idCard = %s'
+            cur1.execute(queryCards, (idcard,))
+            infoCard = cur1.fetchone()
+            print("z db", infoCard)
+            if (connection_object.is_connected()):
+                cur1.close()
+                connection_object.close()
+                print("MySQL connection is closed")
+                return infoCard
+
+    def getTrans(self, accid):
+        connection_object = self.connection_pool.get_connection()
+        if connection_object.is_connected():
+            db_info = connection_object.get_server_info()
+            print("Connected to MySQL database using connection pool ... MySQL Server version on ", db_info)
+            cur1 = connection_object.cursor()
+            queryTrans = 'select * from transation where idAcc = %s'
+            cur1.execute(queryTrans, (accid,))
+            infoTrans = cur1.fetchall()
+            print("z db", infoTrans)
+            if (connection_object.is_connected()):
+                cur1.close()
+                connection_object.close()
+                print("MySQL connection is closed")
+                return infoTrans

@@ -15,12 +15,12 @@
 <header>
     <div id="mainHeader">
         <div class="left">
-          <div id="btnHome" onclick="">Home</div>
+          <div id="btnHome" onclick="showing()">Home</div>
           <div id="btnAccounts" onclick="">Accounts</div>
         </div>
 
         <div class="right">
-         <div class="forAccIcon"></div>
+         <div class="forAccIcon" onclick="hiding()"></div>
          <div id="btnLogout" onclick="logout()">Log out</div>
         </div>
     </div>
@@ -49,9 +49,47 @@
       <div id="divTrans">
           <label id="lblTrans"> Transactions</label>
       </div>
-      <hr style="margin-top: 0px;">
+      <hr style="margin-top: 0px; margin-bottom: 0px">
+      <div id="allTrans" >
+        <table>
+          <tr>
+            <th>Rec Account</th>
+            <th>Id Empoloyee</th>
+            <th>TransDate</th>
+            <th>TransAmount</th>
+          </tr>
+          <tr>
+            <td>Eve</td>
+            <td>Jackson</td>
+            <td>94</td>
+          </tr>
+        </table>
+      </div>
     </div>
 </div>
+
+<div id="userko">
+        <p id="pInfo"> Info about you
+        <hr style="margin-top: 0px; margin-bottom: 0px">
+        <table id="tableUser">
+           <tr>
+               <th>Login: </th>
+               <td><span id="tblLogin"></span></td>
+           </tr>
+            <tr>
+                <th>First Name: </th>
+                <td><span id="tblName"></span></td>
+            </tr>
+            <tr>
+                <th>Last Name: </th>
+                <td><span id="tblSurname"></span></td>
+            </tr>
+            <tr>
+                <th>Email: </th>
+                <td><span id="tblEmail"></span></td>
+            </tr>
+        </table>
+    </div>
 <script>
 
 </script>

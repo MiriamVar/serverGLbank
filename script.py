@@ -54,8 +54,9 @@ json_user = []
 client = ''
 accountiky = []
 cards = []
+trans = []
 
-
+# ide
 @app.route("/login", methods=["POST"])
 def register():
     login = request.form.get("name")
@@ -141,6 +142,7 @@ def register():
                                        blockedErr="Your IB is blocked by Bank Employee.")
 
 
+# ide
 @app.route("/userinfo", methods=["POST"])
 def userDetails():
     token = ""
@@ -162,6 +164,7 @@ def userDetails():
         return "wrong credentials"
 
 
+# ide
 @app.route("/logout", methods=["POST"])
 def logout():
     i = 0
@@ -177,11 +180,7 @@ def logout():
     return jsonify({"mess": "OK"})
 
 
-def toJSONaccounts(self):
-    return {"Account": {'accid': self.accId, 'clinetId': self.clientId,'accNum': self.accNum,
-                        'accAmount': self.accAmount}}
-
-
+# ide
 @app.route("/accounts", methods=["POST"])
 def accounts():
     token = ""
@@ -209,9 +208,10 @@ def accounts():
         print("info o accountoch... stvrta  route")
         return accounts2
     else:
-        return "wrong credentials"
+        jsonify({"status": "wrong credentials"})
 
 
+# ide
 @app.route("/accountsinfo", methods=["POST"])
 def accountsInfo():
     token = ""
@@ -233,11 +233,89 @@ def accountsInfo():
         return jsonify({"accId": detailsAccount[0], "clientId": detailsAccount[1], "accNum": detailsAccount[2],
                         "accAmount": detailsAccount[3]})
     else:
-        return "wrong credentials"
+        return jsonify({"status": "wrong credentials"})
+
+#
+# @app.route("/cards", methods=["POST"])
+# def cards():
+#     token = ""
+#     id = ""
+#     if request.is_json:
+#         content = request.get_json()
+#         token = content["token"]
+#         id = content["id"]
+#     else:
+#         return jsonify({"status": "wrong request"})
+#
+#     accId = getAccid(token, id)
+#     if accId is not None:
+#         print("dostanem sa tuuuuu kartyyyy")
+#         infoCards = db.getCards(accId=accId)
+#         print(infoCards)
+#
+#         for row in infoCards:
+#             cards.append(row)
+#             print(row)
+#
+#         cards2 = json.dumps(cards, separators=(',', ':'))
+#         print("JSON karty")
+#         for row in cards2:
+#             print(row)
+#
+#         print("info o kartach... siesta  route")
+#         return cards2
+#     else:
+#         jsonify({"status": "wrong credentials"})
+#
+#
+# @app.route("/cardsinfo", methods=["POST"])
+# def cardsinfo():
+#     token = ""
+#     id = ""
+#     if request.is_json:
+#         content = request.get_json()
+#         token = content["token"]
+#         id = content["id"]
+#     else:
+#         return jsonify({"status": "wrong request"})
+#
+#     idcard = getCardID(token, id)
+#     if idcard is not None:
+#         print("dostanem sa tu")
+#         infoCard = db.getOneCard(idcard=idcard)
+#         print(infoCard)
+#         print("info o karte... siedma  route")
+#         return jsonify({"cardId": infoCard[0], "accId": infoCard[1], "pin": infoCard[2],
+#                         "expirem": infoCard[3], "expirey": infoCard[4], "active": infoCard[5]})
+#     else:
+#         return jsonify({"status": "wrong credentials"})
+#
+#
+# @app.route("/cardtrans", methods=["POST"])
+# def cardTrans():
+#     token = ""
+#     id = ""
+#     if request.is_json:
+#         content = request.get_json()
+#         token = content["token"]
+#         id = content["id"]
+#     else:
+#         return jsonify({"status": "wrong request"})
+#
+#     idcard = getCardID(token, id)
+#     if idcard is not None:
+#         print("dostanem sa tu")
+#         infoCard = db.getCardTrans(idcard=idcard)
+#         print(infoCard)
+#         print("info o karte... osma  route")
+#         return jsonify({"Id": infoCard[0], "cardId": infoCard[1], "transAmount": infoCard[2],
+#                         "TransDate": infoCard[3]})
+#     else:
+#         return jsonify({"status": "wrong credentials"})
 
 
-@app.route("/cards", methods=["POST"])
-def cards():
+@app.route("/transactions", methods=["POST"])
+def transactions():
     token = ""
     id = ""
     if request.is_json:
@@ -250,70 +328,22 @@ def cards():
     accId = getAccid(token, id)
     if accId is not None:
         print("dostanem sa tu")
-        infoCards = db.getCards(accId=accId)
-        for row in infoCards:
-            card = Card(cardId=row[0], accId=row[1], pin=row[2], expirem=row[3], expirey=row[4], active=row[5])
-            cards.append(card)
+        infotrans = db.getTrans(accid=accId)
+        print(infotrans)
+
+        for row in infotrans:
+            trans.append(row)
             print(row)
 
-        print("info o kartach... siesta  route")
-        return "OK"
+        trans2 = json.dumps(trans, separators=(',', ':'))
+        print("JSON transactions")
+        for row in trans2:
+            print(row)
+
+        print("info o transactions... deviata  route")
+        return trans2
     else:
-        return "wrong credentials"
-
-
-@app.route("/cardsinfo", methods=["POST"])
-def cardsinfo():
-    element = ''
-    success = False
-
-    x = json.loads(request.data)
-    print(x["token"])
-    for element in tokens:
-        if element.clientToken == x["token"] and element.clientId == x["id"]:
-            for swap in cards:
-                idcard = swap.cardId
-                print(idcard)
-            success = True
-            break
-    if success is True:
-        print("dostanem sa tu")
-        infoCard = db.getOneCard(idcard=idcard)
-        print(infoCard)
-        print("info o karte... siedma  route")
-        return "OK"
-    else:
-        return "wrong credentials"
-
-
-# @app.route("/cardtrans", methods=["POST"])
-# def cardTrans():
-#     element = ''
-#     success = False
-#     idcard = ''
-#
-#     x = json.loads(request.data)
-#     print(x["token"])
-#     for element in tokens:
-#         if element.clientToken == x["token"] and element.clientId == x["id"]:
-#             for swap in cards:
-#                 idcard = swap.cardId
-#                 print(idcard)
-#             success = True
-#             break
-#     if success is True:
-#         print("dostanem sa tu")
-#         cur1 = db.cursor()
-#         queryCards = 'select * from cardtrans where idCard = %s'
-#         cur1.execute(queryCards, (idcard,))
-#         infoCard = cur1.fetchone()
-#         print(infoCard)
-#
-#         print("info o karte... siedma  route")
-#         return "OK"
-#     else:
-#         return "wrong credentials"
-#
+        jsonify({"status": "wrong credentials"})
 #
 # @app.route("/changepassword", methods=["POST"])
 # def changePass():
@@ -382,6 +412,15 @@ def getAccnum (token, id):
                 accnum = swap[2]
                 print(accnum)
                 return accnum
+
+
+def getCardID(token, id):
+    for element in tokens:
+        if element.clientToken == token and element.clientId == id:
+            for swap in cards:
+                idcard = swap[0]
+                print(idcard)
+                return idcard
 
 
 if __name__ == "__main__":

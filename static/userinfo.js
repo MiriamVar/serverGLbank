@@ -1,12 +1,17 @@
 let userData = {};
 let accData = {};
 let accounts = {};
+let transaction = {};
 
 
 $(document).ready(function(){
   userinfo();
   loadAccountes();
-  $("#btnLogout").click(function() {logout();});
+  loadTransactions();
+  $("#btnLogout").click(function() {
+    logout();
+  });
+  document.getElementById('userko').style.display= "none"
 
 });
 
@@ -45,6 +50,23 @@ function loadAccountes(){
         else{
             $("#accNumber").text("You don't have any accounts.");
         }
+      }
+  });
+}
+
+function loadTransactions(){
+    let data = {token : window.tokenSecret, id : window.userID};
+    data = JSON.stringify(data);
+    console.log(data);
+    $.ajax({
+      type: 'POST',
+      url: "/transactions",
+      data: data,
+      contentType:"application/json; charset=utf-8",
+        dataType:"json",
+      success: function(resultData) {
+        transactions = resultData;
+        console.log(resultData);
       }
   });
 }
@@ -99,8 +121,12 @@ function logout(){
 
 
 function fillUserData(){
-    $("#ownerFname").text(userData.fname, );
+    $("#ownerFname").text(userData.fname);
     $("#ownerLname").text(userData.lname);
+    $("tblName").text(userData.fname);
+    $("tblSurname").text(userData.lname);
+    $("tblLogin").text(userData.login);
+    $("tblEmail").text(userData.mail);
 }
 
 function fillAccData(){
@@ -108,9 +134,16 @@ function fillAccData(){
     $("#currBal").text(accData.accAmount);
 }
 
-//function fillAccNumbers(){
-//
-//}
+
+function hiding(){
+    document.getElementById('mainDiv').style.display = "none";
+    document.getElementById('userko').style.display ="block";
+}
+
+function showing(){
+    document.getElementById('mainDiv').style.display = "block";
+    document.getElementById('userko').style.display ="none";
+}
 
 
 
