@@ -100,26 +100,23 @@ function loadTransactions(){
         console.log("ma urobit cyklus")
         console.log(resultData.length)
         if(resultData.length > 0){
-         var count = 0
-            for(var i=0; i<resultData.length; i++){
-                var table = document.getElementById("tbltrans");
+            var table = document.getElementById("tbltrans");
+            for(var i=1; i<resultData.length; i++){
                 var row = table.insertRow(i);
-
-                var cell1 = row.insertCell(i);
-                cell1.innerHTML = resultData[1];
-                var cell2 = row.insertCell(i+1);
-                cell2.innerHTML = resultData[2];
-                var cell3 = row.insertCell(i+2);
-                cell3.innerHTML = resultData[4];
-                var cell4 = row.insertCell(i+3);
-                cell4.innerHTML = resultData[3];
-               }
-                count++;
+                var cell1 = row.insertCell(0);
+                cell1.innerHTML = resultData[i][1];
+                var cell2 = row.insertCell(0+1);
+                cell2.innerHTML = resultData[i][2];
+                var cell3 = row.insertCell(0+2);
+                cell3.innerHTML = resultData[i][4];
+                var cell4 = row.insertCell(0+3);
+                cell4.innerHTML = resultData[i][5];
+            }
         }
         else{
             $("#accNumber").text("You don't have any accounts.");
         }
-      }
+        }
      });
 }
 
