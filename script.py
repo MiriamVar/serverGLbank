@@ -208,7 +208,7 @@ def accounts():
         print("info o accountoch... stvrta  route")
         return accounts2
     else:
-        jsonify({"status": "wrong credentials"})
+        return jsonify({"status": "wrong credentials"})
 
 
 # ide
@@ -326,6 +326,8 @@ def transactions():
         return jsonify({"status": "wrong request"})
 
     accId = getAccid(token, id)
+    print("transaction accid ma vypisat")
+    print(accId)
     if accId is not None:
         print("dostanem sa tu")
         infotrans = db.getTrans(accid=accId)
@@ -343,7 +345,7 @@ def transactions():
         print("info o transactions... deviata  route")
         return trans2
     else:
-        jsonify({"status": "wrong credentials"})
+        return jsonify({"status": "wrong credentials"})
 #
 # @app.route("/changepassword", methods=["POST"])
 # def changePass():
@@ -400,7 +402,7 @@ def getAccid(token, id):
     for element in tokens:
         if element.clientToken == token and element.clientId == id:
             for swap in accountiky:
-                accId = swap.accId
+                accId = swap[0]
                 print(accId)
                 return accId
 

@@ -208,7 +208,7 @@ class Databaza(object):
             db_info = connection_object.get_server_info()
             print("Connected to MySQL database using connection pool ... MySQL Server version on ", db_info)
             cur1 = connection_object.cursor()
-            queryTrans = 'select * from transation where idAcc = %s'
+            queryTrans = 'select * from transaction where idAcc = %s'
             cur1.execute(queryTrans, (accid,))
             infoTrans = cur1.fetchall()
             print("z db", infoTrans)
