@@ -54,7 +54,7 @@ json_user = []
 client = ''
 accountiky = []
 cards = []
-trans = []
+
 
 # ide
 @app.route("/login", methods=["POST"])
@@ -318,6 +318,7 @@ def accountsInfo():
 def transactions():
     token = ""
     id = ""
+    print(id)
     if request.is_json:
         content = request.get_json()
         token = content["token"]
@@ -332,6 +333,7 @@ def transactions():
         print("dostanem sa tu")
         infotrans = db.getTrans(accid=accId)
         print(infotrans)
+        trans = []
 
         for row in infotrans:
             trans.append(row)

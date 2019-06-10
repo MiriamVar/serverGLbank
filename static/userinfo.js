@@ -54,20 +54,25 @@ function loadAccountes(){
   });
 }
 
-//function accountsMenu(){
-//    let data = {token : window.tokenSecret, id : window.userID};
-//    data = JSON.stringify(data);
-//    console.log(data);
-//    $.ajax({
-//      type: 'POST',
-//      url: "/accounts",
-//      data: data,
-//      contentType:"application/json; charset=utf-8",
-//        dataType:"json",
-//      success: function(resultData) {accounts = resultData;console.log(resultData);
-//      }
-//  });
-//}
+function accountsMenu(){
+   let data = {token : window.tokenSecret, id : window.userID};
+   data = JSON.stringify(data);
+   console.log(data);
+   $.ajax({
+     type: 'POST',
+     url: "/accounts",
+     data: data,
+     contentType:"application/json; charset=utf-8",
+       dataType:"json",
+     success: function(resultData) {
+       accounts = resultData;
+       console.log(resultData);
+       for (var item in resultData) {
+         makeAccountDiv(item);
+       }
+     }
+ });
+}
 
 
 function accinfo(accnum){
@@ -114,7 +119,7 @@ function loadTransactions(){
             }
         }
         else{
-            $("#accNumber").text("You don't have any accounts.");
+            $("#allTrans").text("You don't have any transactions on this account.");
         }
         }
      });
@@ -142,10 +147,10 @@ function logout(){
 function fillUserData(){
     $("#ownerFname").text(userData.fname);
     $("#ownerLname").text(userData.lname);
-    $("tblName").text(userData.fname);
-    $("tblSurname").text(userData.lname);
-    $("tblLogin").text(userData.login);
-    $("tblEmail").text(userData.mail);
+    $("#tblName").text(userData.fname);
+    $("#tblSurname").text(userData.lname);
+    $("#tblLogin").text(userData.login);
+    $("#tblEmail").text(userData.mail);
 }
 
 function fillAccData(){
@@ -162,6 +167,47 @@ function hiding(){
 function showing(){
     document.getElementById('mainDiv').style.display = "block";
     document.getElementById('userko').style.display ="none";
+}
+
+function showingAcc(){
+    document.getElementById('mainDiv').style.display = "none";
+    document.getElementById('containerAccounts').style.display ="block";
+}
+
+function makeAccountDiv(data){
+  let container = $("#containerAccounts");
+  let smallDivAcc = document.createElement("DIV");
+  smallDivAcc.className = "smallDivAcc";
+
+  let credentialsAcc = document.createElement("DIV");
+  credentialsAcc.className = "credentialsAcc";
+
+  let numberAcc = document.createElement("LABEL");
+  numberAcc.className = "accOwner";
+  let numberA = document.createElement("SPAN");
+  numberA.className = "numberA";
+  numberA.value = data[2];
+
+  numberAcc.appendChild(numberA);
+  credentialsAcc.appendChild(numberAcc);
+
+  let line = document.createElement("HR");
+  credentialsAcc.appendChild(line);
+
+  let balanceCur = document.createElement("LABEL");
+  balanceCur.className = "balanceCur";
+  let money= document.createElement("SPAN");
+  money.className= "money";
+  money.value = data[3];
+  let pay = document.createElement("DIV");
+  pay.className= "pay";
+
+  balanceCur.appendChild(money);
+  credentialsAcc.appendChild(balanceCur);
+  credentialsAcc.appendChild(pay);
+
+  smallDivAcc.appendChild(credentialsAcc);
+  container.appendChild(smallDivAcc);
 }
 
 
