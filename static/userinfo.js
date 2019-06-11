@@ -66,6 +66,7 @@ function accountsMenu(){
        dataType:"json",
      success: function(resultData) {
        accounts = resultData;
+       console.log("acounty usera, acounts menu");
        console.log(resultData);
        for (var item in resultData) {
          makeAccountDiv(item);
@@ -172,11 +173,12 @@ function showing(){
 function showingAcc(){
     document.getElementById('mainDiv').style.display = "none";
     document.getElementById('containerAccounts').style.display ="block";
+    accountsMenu();
 }
 
 function makeAccountDiv(data){
   let container = $("#containerAccounts");
-  let smallDivAcc = document.createElement("DIV");
+  let smallDivAcc = $('<div>');
   smallDivAcc.className = "smallDivAcc";
 
   let credentialsAcc = document.createElement("DIV");
@@ -206,8 +208,8 @@ function makeAccountDiv(data){
   credentialsAcc.appendChild(balanceCur);
   credentialsAcc.appendChild(pay);
 
-  smallDivAcc.appendChild(credentialsAcc);
-  container.appendChild(smallDivAcc);
+  smallDivAcc.append(credentialsAcc);
+  container.append(smallDivAcc);
 }
 
 

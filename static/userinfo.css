@@ -52,7 +52,7 @@ float:right;
 
 }
 
-#mainDiv{
+#mainDiv, #containerAccounts{
     width: 90%;
     margin-left: 5%;
     margin-right: 5%;
@@ -230,4 +230,65 @@ td{
   padding: 2%;
   margin-bottom: 0px;
   text-align: center;
+}
+
+.smallDivAcc{
+   width: 100px;
+   display: inline-block;
+   background-color: white;
+   height:200px;
+   margin-left: 3%;
+   mergin-right:3%;
+   float: left;
+}
+
+.credentialsAcc{
+  width: 90%;
+  height: 80px;
+  background-color: #eae9e8;
+}
+
+.accOwner{
+  width: %;
+  height: 30px;
+  float: left;
+  color: #939393;
+  font-size: 20px;
+  padding-left: 5%;
+}
+
+.numberA{
+  color: #6d6c6c;
+  padding-left: 10px;
+  font-size: 23px;
+}
+
+.balanceCur{
+  width: 70%;
+  height: 20px;
+  float: left;
+  color: #939393;
+  font-size: 20px;
+  padding-left: 5%;
+  margin-top: 5.5%;
+}
+
+.money{
+  color: #6fa86f;
+  padding-left: 3%;
+  font-size: 25px;
+  padding-right: 5px;
+}
+
+.pay{
+  width: 7%;
+  height: 12%;
+  border-color: #ff7f35;
+  float: right;
+  border-style: solid;
+  margin-top: 5.5%;
+  color: #ff7f35;
+  font-size: 10px;
+  padding-top: 3px;
+  padding-left: 3%;
 }

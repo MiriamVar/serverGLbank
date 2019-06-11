@@ -95,14 +95,18 @@ class Databaza(object):
                 print("MySQL connection is closed")
                 return user
 
-
-    # def wrongInsert(self, idClient):
-    #     cur4 = self.__getDb__().cursor()
-    #     queryWrongLP = "insert into loginhistory (idl,success) values (%s,%s)"
-    #     insert = cur4.execute(queryWrongLP, (idClient, 0))
-    #     self.__getDb__().commit()
-    #     cur4.close()
-    #     return
+    def wrongInsert(self, idClient):
+        connection_object = self.connection_pool.get_connection()
+        if connection_object.is_connected():
+            db_info = connection_object.get_server_info()
+            print("Connected to MySQL database using connection pool ... MySQL Server version on ", db_info)
+            cur = connection_object.cursor()
+            queryWrongLP = "insert into loginhistory (idl,success) values (%s,%s)"
+            insert = cur.execute(queryWrongLP, (idClient, 0))
+            if (connection_object.is_connected()):
+                cur.close()
+                connection_object.close()
+                print("MySQL connection is closed")
 
     def getUserInfo(self, login):
         connection_object = self.connection_pool.get_connection()
