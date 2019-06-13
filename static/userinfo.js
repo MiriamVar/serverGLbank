@@ -55,24 +55,12 @@ function loadAccountes(){
 }
 
 function accountsMenu(){
-   let data = {token : window.tokenSecret, id : window.userID};
-   data = JSON.stringify(data);
-   console.log(data);
-   $.ajax({
-     type: 'POST',
-     url: "/accounts",
-     data: data,
-     contentType:"application/json; charset=utf-8",
-       dataType:"json",
-     success: function(resultData) {
-       accounts = resultData;
-       console.log("acounty usera, acounts menu");
-       console.log(resultData);
-       for (var item in resultData) {
-         makeAccountDiv(item);
-       }
-     }
- });
+    $("#containerAccounts").empty();
+    console.log("acounty usera, acounts menu");
+    console.log(accounts);
+    for(var i=0; i<accounts.length; i++){
+         makeAccountDiv(accounts[i])
+    }
 }
 
 
@@ -136,13 +124,9 @@ function logout(){
       data: data,
       contentType:"application/json; charset=utf-8",
         dataType:"json",
-      success: function(resultData) { window.tokenSecret = ""; window.userID=""; window.location.href="http://localhost:5000";}
+      success: function(resultData) { window.tokenSecret = ""; window.userID=""; userData =""; accData =""; accounts =""; transaction = ""; window.location.href="http://localhost:5000";}
   });
 }
-
-
-
-
 
 
 function fillUserData(){
@@ -163,54 +147,25 @@ function fillAccData(){
 function hiding(){
     document.getElementById('mainDiv').style.display = "none";
     document.getElementById('userko').style.display ="block";
+    document.getElementById('containerAccounts').style.display ="none";
 }
 
 function showing(){
     document.getElementById('mainDiv').style.display = "block";
     document.getElementById('userko').style.display ="none";
+    document.getElementById('containerAccounts').style.display ="none";
 }
 
 function showingAcc(){
     document.getElementById('mainDiv').style.display = "none";
+    document.getElementById('userko').style.display ="none";
     document.getElementById('containerAccounts').style.display ="block";
     accountsMenu();
 }
 
 function makeAccountDiv(data){
+  console.log("data v make accoutns... vytvaraju na tabulky s datami");
   let container = $("#containerAccounts");
-  let smallDivAcc = $('<div>');
-  smallDivAcc.className = "smallDivAcc";
-
-  let credentialsAcc = document.createElement("DIV");
-  credentialsAcc.className = "credentialsAcc";
-
-  let numberAcc = document.createElement("LABEL");
-  numberAcc.className = "accOwner";
-  let numberA = document.createElement("SPAN");
-  numberA.className = "numberA";
-  numberA.value = data[2];
-
-  numberAcc.appendChild(numberA);
-  credentialsAcc.appendChild(numberAcc);
-
-  let line = document.createElement("HR");
-  credentialsAcc.appendChild(line);
-
-  let balanceCur = document.createElement("LABEL");
-  balanceCur.className = "balanceCur";
-  let money= document.createElement("SPAN");
-  money.className= "money";
-  money.value = data[3];
-  let pay = document.createElement("DIV");
-  pay.className= "pay";
-
-  balanceCur.appendChild(money);
-  credentialsAcc.appendChild(balanceCur);
-  credentialsAcc.appendChild(pay);
-
-  smallDivAcc.append(credentialsAcc);
+  let smallDivAcc = $('<div class="smallDivAcc"><div class="credentialsAcc"><label class="accOwner">Account Number:  <span class="numberA">'+data[2]+'</span></label></div><hr style="margin-top: 0px;"><label class="balanceCur"> Current Balance: <span class="money">'+data[3]+'</span><span id="euro">€</span></label><div class="pay" onclick="">Payment</div></div>');
   container.append(smallDivAcc);
 }
-
-
-

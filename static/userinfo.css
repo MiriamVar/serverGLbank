@@ -113,6 +113,15 @@ float:right;
   padding-left: 5%;
 }
 
+#allTrans{
+  width: 90%;
+  height: 30px;
+  float: left;
+  color: #6d6c6c;
+  font-size: 20px;
+  padding-left: 5%;
+}
+
 #divTrans, #credentials, #incExp{
   width: 100%;
   height: 80px;
@@ -233,17 +242,18 @@ td{
 }
 
 .smallDivAcc{
-   width: 100px;
+   width: 25%;
    display: inline-block;
    background-color: white;
    height:200px;
    margin-left: 3%;
    mergin-right:3%;
    float: left;
+   margin-bottom: 3%;
 }
 
 .credentialsAcc{
-  width: 90%;
+  width: 100%;
   height: 80px;
   background-color: #eae9e8;
 }
@@ -253,14 +263,15 @@ td{
   height: 30px;
   float: left;
   color: #939393;
-  font-size: 20px;
+  font-size: 17px;
   padding-left: 5%;
+  padding-top: 10%;
 }
 
 .numberA{
   color: #6d6c6c;
   padding-left: 10px;
-  font-size: 23px;
+  font-size: 20px;
 }
 
 .balanceCur{
@@ -268,7 +279,7 @@ td{
   height: 20px;
   float: left;
   color: #939393;
-  font-size: 20px;
+  font-size: 18px;
   padding-left: 5%;
   margin-top: 5.5%;
 }
@@ -281,14 +292,13 @@ td{
 }
 
 .pay{
-  width: 7%;
+  width: 17%;
   height: 12%;
   border-color: #ff7f35;
   float: right;
   border-style: solid;
-  margin-top: 5.5%;
+  margin-top: 17%;
   color: #ff7f35;
-  font-size: 10px;
-  padding-top: 3px;
-  padding-left: 3%;
+  padding-top: 2%;
+  padding-left: 2%;
 }
