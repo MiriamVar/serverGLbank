@@ -190,21 +190,6 @@ class Databaza(object):
                 print("MySQL connection is closed")
                 return infoCard
 
-    def getCardTrans(self, idcard):
-        connection_object = self.connection_pool.get_connection()
-        if connection_object.is_connected():
-            db_info = connection_object.get_server_info()
-            print("Connected to MySQL database using connection pool ... MySQL Server version on ", db_info)
-            cur1 = connection_object.cursor()
-            queryCards = 'select * from cardtrans where idCard = %s'
-            cur1.execute(queryCards, (idcard,))
-            infoCard = cur1.fetchone()
-            print("z db", infoCard)
-            if (connection_object.is_connected()):
-                cur1.close()
-                connection_object.close()
-                print("MySQL connection is closed")
-                return infoCard
 
     def getTrans(self, accid):
         connection_object = self.connection_pool.get_connection()

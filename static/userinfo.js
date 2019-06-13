@@ -2,6 +2,7 @@ let userData = {};
 let accData = {};
 let accounts = {};
 let transaction = {};
+let cards = {};
 
 
 $(document).ready(function(){
@@ -54,6 +55,29 @@ function loadAccountes(){
   });
 }
 
+function loadCards(){
+    let data = {token : window.tokenSecret, id : window.userID};
+    data = JSON.stringify(data);
+    console.log(data);
+    $.ajax({
+      type: 'POST',
+      url: "/cards",
+      data: data,
+      contentType:"application/json; charset=utf-8",
+        dataType:"json",
+      success: function(resultData) {
+        cards = resultData;
+        console.log(resultData);
+        if(resultData.length > 0){
+            cardsMenu();
+        }
+        else{
+            $("#accNumber").text("You don't have any accounts.");
+        }
+      }
+  });
+}
+
 function accountsMenu(){
     $("#containerAccounts").empty();
     console.log("acounty usera, acounts menu");
@@ -62,6 +86,7 @@ function accountsMenu(){
          makeAccountDiv(accounts[i])
     }
 }
+
 
 
 function accinfo(accnum){
@@ -128,6 +153,15 @@ function logout(){
   });
 }
 
+function cardsMenu(){
+    $("#containerCards").empty();
+    console.log("karty usera, cards menu");
+    console.log(cards);
+    for(var i=0; i<cards.length; i++){
+         makeCardDiv(cards[i])
+    }
+}
+
 
 function fillUserData(){
     $("#ownerFname").text(userData.fname);
@@ -163,9 +197,23 @@ function showingAcc(){
     accountsMenu();
 }
 
+function showingCards(){
+    document.getElementById('mainDiv').style.display = "none";
+    document.getElementById('userko').style.display ="none";
+    document.getElementById('containerAccounts').style.display ="none";
+    cardsMenu();
+}
+
 function makeAccountDiv(data){
   console.log("data v make accoutns... vytvaraju na tabulky s datami");
   let container = $("#containerAccounts");
   let smallDivAcc = $('<div class="smallDivAcc"><div class="credentialsAcc"><label class="accOwner">Account Number:  <span class="numberA">'+data[2]+'</span></label></div><hr style="margin-top: 0px;"><label class="balanceCur"> Current Balance: <span class="money">'+data[3]+'</span><span id="euro">€</span></label><div class="pay" onclick="">Payment</div></div>');
+  container.append(smallDivAcc);
+}
+
+function makeCardDiv(data){
+  console.log("data v make cards... vytvaraju sa tabulky s datami");
+  let container = $("#containerCards");
+  let smallDivAcc = $('<div class="smallDivAcc"><div class="credentialsAcc"><label class="accOwner">Account Number:  <span class="numberA">'+data[2]+'</span></label></div><hr style="margin-top: 0px;"><label class="pin"> PIN: <span class="pinCode">'+data[2]+'</span></label><div class="date">Expire Date: <span class="expireM">'+data[3]+'</span> <span id="slash">'/'</span><span class="expireY">'+data[4]+'</span></div><label class="lblActive"> Active: <span class="active">'+data[5]+'</span></label></div>');
   container.append(smallDivAcc);
 }
