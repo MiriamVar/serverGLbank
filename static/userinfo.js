@@ -12,7 +12,6 @@ $(document).ready(function(){
     logout();
   });
   document.getElementById('userko').style.display= "none"
-
 });
 
 
@@ -47,6 +46,7 @@ function loadAccountes(){
             let accnum = resultData[0].accNum;
             accinfo(accnum);
             loadTransactions();
+            loadCards();
         }
         else{
             $("#accNumber").text("You don't have any accounts.");
@@ -182,18 +182,21 @@ function hiding(){
     document.getElementById('mainDiv').style.display = "none";
     document.getElementById('userko').style.display ="block";
     document.getElementById('containerAccounts').style.display ="none";
+    document.getElementById('containerCards').style.display ="none";
 }
 
 function showing(){
     document.getElementById('mainDiv').style.display = "block";
     document.getElementById('userko').style.display ="none";
     document.getElementById('containerAccounts').style.display ="none";
+    document.getElementById('containerCards').style.display ="none";
 }
 
 function showingAcc(){
     document.getElementById('mainDiv').style.display = "none";
     document.getElementById('userko').style.display ="none";
     document.getElementById('containerAccounts').style.display ="block";
+    document.getElementById('containerCards').style.display ="none";
     accountsMenu();
 }
 
@@ -214,6 +217,6 @@ function makeAccountDiv(data){
 function makeCardDiv(data){
   console.log("data v make cards... vytvaraju sa tabulky s datami");
   let container = $("#containerCards");
-  let smallDivAcc = $('<div class="smallDivAcc"><div class="credentialsAcc"><label class="accOwner">Account Number:  <span class="numberA">'+data[2]+'</span></label></div><hr style="margin-top: 0px;"><label class="pin"> PIN: <span class="pinCode">'+data[2]+'</span></label><div class="date">Expire Date: <span class="expireM">'+data[3]+'</span> <span id="slash">'/'</span><span class="expireY">'+data[4]+'</span></div><label class="lblActive"> Active: <span class="active">'+data[5]+'</span></label></div>');
-  container.append(smallDivAcc);
+  let smallDivCard = $('<div class="smallDivCard"><div class="credentialsAcc"><label class="accOwner">Account ID:  <span class="numberA">'+data[1]+'</span></label></div><hr style="margin-top: 0px;"><label class="accOwner"> PIN: <span class="numberA">'+data[2]+'</span></label><div class="accOwner">Expire Date: <span class="numberA">'+data[3]+'</span> <span id="slash">'/'</span><span class="numberA">'+data[4]+'</span></div><label class="accOwner"> Active: <span class="numberA">'+data[5]+'</span></label></div>');
+  container.append(smallDivCard);
 }

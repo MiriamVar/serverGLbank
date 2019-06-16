@@ -49,11 +49,10 @@ class UserInfo(object):
 
 
 tokens = []
-idClient = 0
+
 json_user = []
-client = ''
 accountiky = []
-cards = []
+allCards = []
 
 
 # ide
@@ -192,7 +191,7 @@ def accounts():
     else:
         return jsonify({"status": "wrong request"})
     if isValidTokenAndId(token, id) is True:
-        print("dostanem sa tuuuu")
+        print("dostanem sa tuuuu UCTY")
         infoAccounts = db.getAccounts(id=id)
         print(infoAccounts)
 
@@ -248,16 +247,18 @@ def cards():
         return jsonify({"status": "wrong request"})
 
     accId = getAccid(token, id)
+    print('idecko accountu')
+    print(accId)
     if accId is not None:
         print("dostanem sa tuuuuu kartyyyy")
         infoCards = db.getCards(accId=accId)
         print(infoCards)
 
         for row in infoCards:
-            cards.append(row)
+            allCards.append(row)
             print(row)
 
-        cards2 = json.dumps(cards, separators=(',', ':'))
+        cards2 = json.dumps(allCards, separators=(',', ':'))
         print("JSON karty")
         for row in cards2:
             print(row)
@@ -265,7 +266,7 @@ def cards():
         print("info o kartach... siesta  route")
         return cards2
     else:
-        jsonify({"status": "wrong credentials"})
+        return jsonify({"status": "wrong credentials"})
 #
 #
 # @app.route("/cardsinfo", methods=["POST"])
@@ -401,7 +402,7 @@ def getAccnum (token, id):
 def getCardID(token, id):
     for element in tokens:
         if element.clientToken == token and element.clientId == id:
-            for swap in cards:
+            for swap in allCards:
                 idcard = swap[0]
                 print(idcard)
                 return idcard

@@ -52,7 +52,7 @@ float:right;
 
 }
 
-#mainDiv, #containerAccounts{
+#mainDiv, #containerAccounts, #containerCards{
     width: 90%;
     margin-left: 5%;
     margin-right: 5%;
@@ -246,6 +246,17 @@ td{
    display: inline-block;
    background-color: white;
    height:200px;
+   margin-left: 3%;
+   mergin-right:3%;
+   float: left;
+   margin-bottom: 3%;
+}
+
+.smallDivCard{
+   width: 20%;
+   display: inline-block;
+   background-color: white;
+   height:300px;
    margin-left: 3%;
    mergin-right:3%;
    float: left;
