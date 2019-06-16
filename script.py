@@ -334,27 +334,36 @@ def transactions():
 
 @app.route("/changepassword", methods=["POST"])
 def changePass():
-    oldPass = request.form.get("oldPassword")
+    swap_oldPass = request.form.get("oldPassword")
+    print(swap_oldPass)
     newPass = request.form.get("newPassword")
+    print(newPass)
     newPass2 = request.form.get("confirmPassword")
+    print(newPass2)
+
+    oldPass = hashlib.md5(swap_oldPass.encode()).hexdigest()
 
     token = ""
     id = ""
+    print(request.get_json())
+
     if request.is_json:
         content = request.get_json()
         token = content["token"]
         id = content["id"]
     else:
-        return jsonify({"status": "wrong request"})
+        return jsonify({"status": "wrong request prvy"})
 
     login = getLogin(token, id)
+    print(login)
     if login is not None and newPass == newPass2:
         print("dostanem sa tu ... na change password")
-        db.changePass(newPass=newPass,login=login,oldPass=oldPass)
+        swap_newPass = hashlib.md5(newPass.hexdigest())
+        db.changePass(newPass=swap_newPass, login=login, oldPass=oldPass)
         print("info o karte... siedma  route")
         return jsonify({"status": "OK"})
     else:
-        return jsonify({"status": "wrong request"})
+        return jsonify({"status": "wrong request druhy"})
 
 
 # @app.route("/blockcard", methods=["POST"])
