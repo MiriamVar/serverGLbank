@@ -14,6 +14,7 @@ $(document).ready(function(){
   document.getElementById('userProfile').style.display= "none";
   document.getElementById('containerAccounts').style.display ="none";
   document.getElementById('containerCards').style.display ="none";
+
 });
 
 

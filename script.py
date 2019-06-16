@@ -61,7 +61,7 @@ def register():
     login = request.form.get("name")
     passswap = request.form.get("pass")
     if login == "" or login is None or passswap == "" or passswap is None:
-        return
+        return jsonify({"mess": "blud"})
     encoder = hashlib.md5()
     encoder.update(passswap.encode('utf-8'))
     password = encoder.hexdigest()
