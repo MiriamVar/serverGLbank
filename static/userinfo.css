@@ -52,7 +52,7 @@ float:right;
 
 }
 
-#mainDiv, #containerAccounts, #containerCards{
+#mainDiv, #containerAccounts, #containerCards, #userProfile{
     width: 90%;
     margin-left: 5%;
     margin-right: 5%;
@@ -222,11 +222,25 @@ td{
   text-align: center;
 }
 
+
 #userko{
   width: 30%;
-  margin-left: 35%;
-  margin-right: 20%;
+  display: block;
+  margin-left: 10%;
+  margin-right: 5%;
   margin-top: 10%;
+  float: left;
+}
+
+#changePass{
+    width: 30%;
+    margin-left: 5%;
+    margin-right: 20%;
+    margin-top: 7.5%;
+    background-color: white;
+    height: 55%;
+    float: right;
+    display: inline-block;
 }
 
 #tableUser, th, td{
@@ -234,13 +248,14 @@ td{
   padding: 3%;
 }
 
-#pInfo{
-  color: #6d6c6c;
-  font-size: 20px;
-  background-color: #eae9e8;
-  padding: 2%;
-  margin-bottom: 0px;
-  text-align: center;
+.pInfo{
+    color: #6d6c6c;
+    font-size: 20px;
+    background-color: #eae9e8;
+    padding: 2%;
+    margin-bottom: 0px;
+    text-align: center;
+    margin-top: 0%;
 }
 
 .smallDivAcc{
@@ -271,14 +286,30 @@ td{
   background-color: #eae9e8;
 }
 
-.accOwner{
-  width: %;
+.accOwner {
   height: 30px;
   float: left;
   color: #939393;
   font-size: 17px;
   padding-left: 5%;
   padding-top: 10%;
+}
+
+.lblChangePass{
+    width: 100%;
+    height: 30px;
+    float: left;
+    color: #939393;
+    font-size: 15px;
+    padding-left: 5%;
+    padding-top: 5%;
+    padding-bottom: 3%;
+    padding-right: 5.5%;
+    text-align: center;
+}
+
+#btnChangePass{
+    margin-left: 45%;
 }
 
 .numberA{

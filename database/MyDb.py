@@ -190,7 +190,6 @@ class Databaza(object):
                 print("MySQL connection is closed")
                 return infoCard
 
-
     def getTrans(self, accid):
         connection_object = self.connection_pool.get_connection()
         if connection_object.is_connected():
@@ -206,3 +205,17 @@ class Databaza(object):
                 connection_object.close()
                 print("MySQL connection is closed")
                 return infoTrans
+
+    def changePass(self, newPass, login, oldPass):
+        connection_object = self.connection_pool.get_connection()
+        if connection_object.is_connected():
+            db_info = connection_object.get_server_info()
+            print("Connected to MySQL database using connection pool ... MySQL Server version on ", db_info)
+            cur4 = connection_object.cursor()
+            queryChangePass = "update loginclient set password= %s where login = %s and password = %s"
+            update = cur4.execute(queryChangePass, (newPass, login, oldPass))
+            if (connection_object.is_connected()):
+                cur4.close()
+                connection_object.close()
+                print("MySQL connection is closed")
+                print("changing done")

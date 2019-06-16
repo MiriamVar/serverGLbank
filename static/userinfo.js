@@ -11,7 +11,9 @@ $(document).ready(function(){
   $("#btnLogout").click(function() {
     logout();
   });
-  document.getElementById('userko').style.display= "none"
+  document.getElementById('userProfile').style.display= "none";
+  document.getElementById('containerAccounts').style.display ="none";
+  document.getElementById('containerCards').style.display ="none";
 });
 
 
@@ -122,12 +124,20 @@ function loadTransactions(){
             var table = document.getElementById("tbltrans");
             for(var i=1; i<resultData.length; i++){
                 var row = table.insertRow(i);
+
                 var cell1 = row.insertCell(0);
                 cell1.innerHTML = resultData[i][1];
+
                 var cell2 = row.insertCell(0+1);
                 cell2.innerHTML = resultData[i][2];
+
                 var cell3 = row.insertCell(0+2);
-                cell3.innerHTML = resultData[i][4];
+                var stringDate = (resultData[i][4]);
+                console.log("string date .. jaky vytiahnem");
+                console.log(stringDate);
+                var d = new Date(stringDate);
+                cell3.innerHTML = d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+("0" + d.getDate()).slice(-2)+" "+("0" + d.getHours()).slice(-2)+":"+("0" + d.getMinutes()).slice(-2)+":"+("0" + d.getSeconds()).slice(-2);
+
                 var cell4 = row.insertCell(0+3);
                 cell4.innerHTML = resultData[i][5];
             }
@@ -150,6 +160,20 @@ function logout(){
       contentType:"application/json; charset=utf-8",
         dataType:"json",
       success: function(resultData) { window.tokenSecret = ""; window.userID=""; userData =""; accData =""; accounts =""; transaction = ""; window.location.href="http://localhost:5000";}
+  });
+}
+
+function changePassword(){
+    let data = {token : window.tokenSecret, id : window.userID,};
+    data = JSON.stringify(data);
+    console.log(data);
+    $.ajax({
+      type: 'POST',
+      url: "/changepassword",
+      data: data,
+      contentType:"application/json; charset=utf-8",
+        dataType:"json",
+      success: function(resultData) {console.log(resultData) console.log("change urobeny")}
   });
 }
 
@@ -180,21 +204,21 @@ function fillAccData(){
 
 function hiding(){
     document.getElementById('mainDiv').style.display = "none";
-    document.getElementById('userko').style.display ="block";
+    document.getElementById('userProfile').style.display ="block";
     document.getElementById('containerAccounts').style.display ="none";
     document.getElementById('containerCards').style.display ="none";
 }
 
 function showing(){
     document.getElementById('mainDiv').style.display = "block";
-    document.getElementById('userko').style.display ="none";
+    document.getElementById('userProfile').style.display ="none";
     document.getElementById('containerAccounts').style.display ="none";
     document.getElementById('containerCards').style.display ="none";
 }
 
 function showingAcc(){
     document.getElementById('mainDiv').style.display = "none";
-    document.getElementById('userko').style.display ="none";
+    document.getElementById('userProfile').style.display ="none";
     document.getElementById('containerAccounts').style.display ="block";
     document.getElementById('containerCards').style.display ="none";
     accountsMenu();
@@ -202,7 +226,7 @@ function showingAcc(){
 
 function showingCards(){
     document.getElementById('mainDiv').style.display = "none";
-    document.getElementById('userko').style.display ="none";
+    document.getElementById('userProfile').style.display ="none";
     document.getElementById('containerAccounts').style.display ="none";
     document.getElementById('containerCards').style.display ="block";
     cardsMenu();

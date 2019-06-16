@@ -64,8 +64,9 @@
     </div>
 </div>
 
-<div id="userko">
-        <p id="pInfo"> Info about you
+<div id="userProfile">
+    <div id="userko">
+        <p class="pInfo"> Info about you
         <hr style="margin-top: 0px; margin-bottom: 0px">
         <table id="tableUser">
            <tr>
@@ -85,6 +86,17 @@
                 <td><span id="tblEmail"></span></td>
             </tr>
         </table>
+    </div>
+     <div id="changePass">
+         <form action="/changepassword" method="post" >
+             <p class="pInfo"> Change password</p>
+             <hr style="margin-top: 0px; margin-bottom: 0px">
+             <label class="lblChangePass">Old password: <input name="oldPassword" type="password" required="" ></label>
+             <label class="lblChangePass">New password: <input name="newPassword" type="password" required="" ></label>
+             <label class="lblChangePass">Confirm new password: <input name="confirmPassword" type="password" required=""></label>
+         </form>
+        <button id="btnChangePass" onclick="changePassword()">OK</button>
+    </div>
 </div>
 
 <div id="containerAccounts"></div>

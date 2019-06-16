@@ -51,8 +51,8 @@ class UserInfo(object):
 tokens = []
 
 json_user = []
-accountiky = []
-allCards = []
+accountiky = dict()
+allCards = dict()
 
 
 # ide
@@ -195,14 +195,15 @@ def accounts():
         infoAccounts = db.getAccounts(id=id)
         print(infoAccounts)
 
+        swap_accounts = []
         for row in infoAccounts:
-            accountiky.append(row)
+            swap_accounts.append(row)
             print(row)
 
-        accounts2 = json.dumps(accountiky, separators=(',', ':'))
+        accountiky[token] = swap_accounts
+        accounts2 = json.dumps(swap_accounts, separators=(',', ':'))
         print("JSON acoounty")
-        for row in accounts2:
-            print(row)
+        print(accounts2)
 
         print("info o accountoch... stvrta  route")
         return accounts2
@@ -254,14 +255,15 @@ def cards():
         infoCards = db.getCards(accId=accId)
         print(infoCards)
 
+        swap_cards = []
         for row in infoCards:
-            allCards.append(row)
+            swap_cards.append(row)
             print(row)
 
-        cards2 = json.dumps(allCards, separators=(',', ':'))
+        allCards[token] = swap_cards
+        cards2 = json.dumps(swap_cards, separators=(',', ':'))
         print("JSON karty")
-        for row in cards2:
-            print(row)
+        print(cards2)
 
         print("info o kartach... siesta  route")
         return cards2
@@ -322,41 +324,37 @@ def transactions():
 
         trans2 = json.dumps(trans, separators=(',', ':'))
         print("JSON transactions")
-        for row in trans2:
-            print(row)
+        print(trans2)
 
         print("info o transactions... deviata  route")
         return trans2
     else:
         return jsonify({"status": "wrong credentials"})
-#
-# @app.route("/changepassword", methods=["POST"])
-# def changePass():
-#     oldPass = request.form.get("oldPassword")
-#     newPass = request.form.get("newPassword")
-#
-#     token = ""
-#     id = ""
-#     if request.is_json:
-#         content = request.get_json()
-#         token = content["token"]
-#         id = content["id"]
-#     else:
-#         return jsonify({"status": "wrong request"})
-#     login = getLogin(token, id)
-#     if login is not None:
-#         print("dostanem sa tu")
-#         cur1 = db.cursor()
-#         queryPass = 'update loginclient  set password = %s where login = %s and password = %s'
-#         cur1.execute(queryPass, (newPass, login, oldPass ))
-#         infoCard = cur1.fetchone()
-#         print(infoCard)
-#
-#         print("info o karte... siedma  route")
-#         db.commit()
-#         return "OK"
-#     else:
-#         return "wrong credentials"
+
+
+@app.route("/changepassword", methods=["POST"])
+def changePass():
+    oldPass = request.form.get("oldPassword")
+    newPass = request.form.get("newPassword")
+    newPass2 = request.form.get("confirmPassword")
+
+    token = ""
+    id = ""
+    if request.is_json:
+        content = request.get_json()
+        token = content["token"]
+        id = content["id"]
+    else:
+        return jsonify({"status": "wrong request"})
+
+    login = getLogin(token, id)
+    if login is not None and newPass == newPass2:
+        print("dostanem sa tu ... na change password")
+        db.changePass(newPass=newPass,login=login,oldPass=oldPass)
+        print("info o karte... siedma  route")
+        return jsonify({"status": "OK"})
+    else:
+        return jsonify({"status": "wrong request"})
 
 
 # @app.route("/blockcard", methods=["POST"])
@@ -384,7 +382,7 @@ def getLogin(token, id):
 def getAccid(token, id):
     for element in tokens:
         if element.clientToken == token and element.clientId == id:
-            for swap in accountiky:
+            for swap in accountiky[token]:
                 accId = swap[0]
                 print(accId)
                 return accId
@@ -393,7 +391,7 @@ def getAccid(token, id):
 def getAccnum (token, id):
     for element in tokens:
         if element.clientToken == token and element.clientId == id:
-            for swap in accountiky:
+            for swap in accountiky[token]:
                 accnum = swap[2]
                 print(accnum)
                 return accnum
@@ -402,7 +400,7 @@ def getAccnum (token, id):
 def getCardID(token, id):
     for element in tokens:
         if element.clientToken == token and element.clientId == id:
-            for swap in allCards:
+            for swap in allCards[token]:
                 idcard = swap[0]
                 print(idcard)
                 return idcard
