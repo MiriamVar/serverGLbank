@@ -204,6 +204,7 @@ function showingCards(){
     document.getElementById('mainDiv').style.display = "none";
     document.getElementById('userko').style.display ="none";
     document.getElementById('containerAccounts').style.display ="none";
+    document.getElementById('containerCards').style.display ="block";
     cardsMenu();
 }
 
@@ -217,6 +218,6 @@ function makeAccountDiv(data){
 function makeCardDiv(data){
   console.log("data v make cards... vytvaraju sa tabulky s datami");
   let container = $("#containerCards");
-  let smallDivCard = $('<div class="smallDivCard"><div class="credentialsAcc"><label class="accOwner">Account ID:  <span class="numberA">'+data[1]+'</span></label></div><hr style="margin-top: 0px;"><label class="accOwner"> PIN: <span class="numberA">'+data[2]+'</span></label><div class="accOwner">Expire Date: <span class="numberA">'+data[3]+'</span> <span id="slash">'/'</span><span class="numberA">'+data[4]+'</span></div><label class="accOwner"> Active: <span class="numberA">'+data[5]+'</span></label></div>');
+  let smallDivCard = $('<div class="smallDivCard"><div class="credentialsAcc"><label class="accOwner">Account ID:  <span class="numberA">'+data[1]+'</span></label></div><hr style="margin-top: 0px;"><label class="accOwner"> PIN: <span class="numberA">'+data[2]+'</span></label><div class="accOwner">Expire Date: <span class="numberA">'+data[3]+'</span> <span id="slash">/</span><span class="numberA">'+data[4]+'</span></div><label class="accOwner"> Active: <span class="numberA">'+data[5]+'</span></label></div>');
   container.append(smallDivCard);
 }
