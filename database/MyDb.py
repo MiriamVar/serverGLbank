@@ -214,6 +214,8 @@ class Databaza(object):
             cur4 = connection_object.cursor()
             queryChangePass = "update loginclient set password= %s where login = %s and password = %s"
             update = cur4.execute(queryChangePass, (newPass, login, oldPass))
+            print("vypisujem update")
+            print("affected rows = {}".format(cur4.rowcount))
             if (connection_object.is_connected()):
                 cur4.close()
                 connection_object.close()

@@ -164,9 +164,10 @@ function logout(){
 }
 
 function changePassword(){
-    let data = {token : window.tokenSecret, id : window.userID,};
+    let data = {token : window.tokenSecret, id : window.userID, old : $("#oldPassword").val(), newP : $("#newPassword").val(), confP : $("#confirmPassword").val()};
     data = JSON.stringify(data);
     console.log(data);
+    alert(data);
     $.ajax({
       type: 'POST',
       url: "/changepassword",

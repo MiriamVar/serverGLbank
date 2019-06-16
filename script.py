@@ -60,7 +60,16 @@ allCards = dict()
 def register():
     login = request.form.get("name")
     passswap = request.form.get("pass")
-    password = hashlib.md5(passswap.encode()).hexdigest()
+    if login == "" or login is None or passswap == "" or passswap is None:
+        return
+    encoder = hashlib.md5()
+    encoder.update(passswap.encode('utf-8'))
+    password = encoder.hexdigest()
+    print(password)
+    # password = hashlib.md5(passswap.encode()).hexdigest()
+    # encoder = hashlib.md5()
+    # encoder.update(passswap)
+    # password = encoder.hexdigest()
     print(password)
     if not login or not password:
         return render_template("loginError.html", usernameErr="", passwordErr="", blockedErr="Wrong username or password.")
@@ -334,31 +343,31 @@ def transactions():
 
 @app.route("/changepassword", methods=["POST"])
 def changePass():
-    swap_oldPass = request.form.get("oldPassword")
-    print(swap_oldPass)
-    newPass = request.form.get("newPassword")
-    print(newPass)
-    newPass2 = request.form.get("confirmPassword")
-    print(newPass2)
-
-    oldPass = hashlib.md5(swap_oldPass.encode()).hexdigest()
-
     token = ""
     id = ""
-    print(request.get_json())
+    swap_oldPass = ""
+    newPass = ""
+    newPass2 = ""
+    oldPass = ""
 
     if request.is_json:
         content = request.get_json()
         token = content["token"]
         id = content["id"]
+        swap_oldPass = content["old"]
+        newPass = content["newP"]
+        newPass2 = content["confP"]
     else:
         return jsonify({"status": "wrong request prvy"})
 
     login = getLogin(token, id)
     print(login)
+    if login == "" or login is None:
+        return
     if login is not None and newPass == newPass2:
         print("dostanem sa tu ... na change password")
-        swap_newPass = hashlib.md5(newPass.hexdigest())
+        oldPass = hashlib.md5(swap_oldPass.encode()).hexdigest()
+        swap_newPass = hashlib.md5(newPass.encode()).hexdigest()
         db.changePass(newPass=swap_newPass, login=login, oldPass=oldPass)
         print("info o karte... siedma  route")
         return jsonify({"status": "OK"})
