@@ -335,7 +335,7 @@ def transactions():
         print("JSON transactions")
         print(trans2)
 
-        print("info o transactions... deviata  route")
+        print("info o transactions.. siedma  route")
         return trans2
     else:
         return jsonify({"status": "wrong credentials"})
@@ -369,14 +369,31 @@ def changePass():
         oldPass = hashlib.md5(swap_oldPass.encode()).hexdigest()
         swap_newPass = hashlib.md5(newPass.encode()).hexdigest()
         db.changePass(newPass=swap_newPass, login=login, oldPass=oldPass)
-        print("info o karte... siedma  route")
+        print("info o karte... osma  route")
         return jsonify({"status": "OK"})
     else:
         return jsonify({"status": "wrong request druhy"})
 
 
-# @app.route("/blockcard", methods=["POST"])
-# def blockingcard():
+@app.route("/blockcard", methods=["POST"])
+def blockingcard():
+    token = ""
+    id = ""
+    if request.is_json:
+        content = request.get_json()
+        token = content["token"]
+        id = content["id"]
+    else:
+        return jsonify({"status": "wrong request"})
+
+    accId = getAccid(token, id)
+    if accId is not None:
+        print("dostanem sa tu")
+        db.blockCard(idAcc=accId)
+        print("blokovanie karty .. deviata route")
+        return jsonify({"status": "OK"})
+    else:
+        return jsonify({"status": "wrong credentials"})
 
 
 def isValidTokenAndId(token, id):

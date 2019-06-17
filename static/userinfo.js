@@ -53,6 +53,7 @@ function loadAccountes(){
         }
         else{
             $("#accNumber").text("You don't have any accounts.");
+            $("#containerAccounts").text("You don't have any accounts.");
         }
       }
   });
@@ -75,7 +76,7 @@ function loadCards(){
             cardsMenu();
         }
         else{
-            $("#accNumber").text("You don't have any accounts.");
+            $("#containerCards").text("You don't have any cards.");
         }
       }
   });
@@ -243,7 +244,32 @@ function makeAccountDiv(data){
 
 function makeCardDiv(data){
   console.log("data v make cards... vytvaraju sa tabulky s datami");
+  console.log(data);
   let container = $("#containerCards");
-  let smallDivCard = $('<div class="smallDivCard"><div class="credentialsAcc"><label class="accOwner">Account ID:  <span class="numberA">'+data[1]+'</span></label></div><hr style="margin-top: 0px;"><label class="accOwner"> PIN: <span class="numberA">'+data[2]+'</span></label><div class="accOwner">Expire Date: <span class="numberA">'+data[3]+'</span> <span id="slash">/</span><span class="numberA">'+data[4]+'</span></div><label class="accOwner"> Active: <span class="numberA">'+data[5]+'</span></label></div>');
+  let active ="";
+  if(data[5] == 0){
+    active = "False";
+  }
+  else{
+    active = "True";
+  }
+  let smallDivCard = $('<div class="smallDivCard"><div class="credentialsAcc"><label class="accOwner">Account ID:  <span class="numberA">'+data[1]+'</span></label></div><hr style="margin-top: 0px;"><label class="accOwner"> PIN: <span class="numberA">'+data[2]+'</span></label><div class="accOwner">Expire Date: <span class="numberA">'+data[3]+'</span> <span id="slash">/</span><span class="numberA">'+data[4]+'</span></div><label class="accOwner"> Active: <span class="numberA">'+active+'</span></label><div class="block">Block</div></div></div>');
+  $("div").click(function(){
+    $(".block").attr("onclick", "blockingCard('data')");
+  });
   container.append(smallDivCard);
+}
+
+function blockingCard(data){
+    let data2 = {token : window.tokenSecret, id : window.userID,};
+    data3 = JSON.stringify(data2);
+    console.log(data3);
+    $.ajax({
+      type: 'POST',
+      url: "/blockcard",
+      data: data,
+      contentType:"application/json; charset=utf-8",
+        dataType:"json",
+      success: function(resultData) {}
+  });
 }

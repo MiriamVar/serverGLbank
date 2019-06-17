@@ -221,3 +221,34 @@ class Databaza(object):
                 connection_object.close()
                 print("MySQL connection is closed")
                 print("changing done")
+
+    def getTrans2(self, recAcc):
+        connection_object = self.connection_pool.get_connection()
+        if connection_object.is_connected():
+            db_info = connection_object.get_server_info()
+            print("Connected to MySQL database using connection pool ... MySQL Server version on ", db_info)
+            cur1 = connection_object.cursor()
+            queryTrans = 'select * from transaction where recAccount = %s'
+            cur1.execute(queryTrans, (recAcc,))
+            infoTrans = cur1.fetchall()
+            print("z db", infoTrans)
+            if (connection_object.is_connected()):
+                cur1.close()
+                connection_object.close()
+                print("MySQL connection is closed")
+                return infoTrans
+
+    def blockCard(self, idAcc):
+        connection_object = self.connection_pool.get_connection()
+        if connection_object.is_connected():
+            db_info = connection_object.get_server_info()
+            print("Connected to MySQL database using connection pool ... MySQL Server version on ", db_info)
+            cur1 = connection_object.cursor()
+            queryBlock = 'update card set active= 0 where ida = %s'
+            cur1.execute(queryBlock, (idAcc,))
+            print("vypisujem update blokovania")
+            print("affected rows = {}".format(cur1.rowcount))
+            if (connection_object.is_connected()):
+                cur1.close()
+                connection_object.close()
+                print("MySQL connection is closed")

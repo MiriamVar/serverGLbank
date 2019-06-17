@@ -76,6 +76,7 @@ float:right;
     margin-left: 47%;
     background-color: white;
     height: 525px;
+    overflow-x: hidden;
 }
 
 #firstSmallDiv{
@@ -119,7 +120,6 @@ float:right;
   float: left;
   color: #6d6c6c;
   font-size: 20px;
-  padding-left: 5%;
 }
 
 #divTrans, #credentials, #incExp{
@@ -228,7 +228,7 @@ td{
   display: block;
   margin-left: 10%;
   margin-right: 5%;
-  margin-top: 10%;
+  margin-top: 7.5%;
   float: left;
 }
 
@@ -245,7 +245,7 @@ td{
 
 #tableUser, th, td{
   background-color: white;
-  padding: 3%;
+  padding: 5%;
 }
 
 .pInfo{
@@ -273,7 +273,7 @@ td{
    width: 15%;
    display: inline-block;
    background-color: white;
-   height:250px;
+   height:55%;
    margin-left: 3%;
    mergin-right:3%;
    float: left;
@@ -344,4 +344,15 @@ td{
   margin-top: 19.5%;
   color: #ff7f35;
   padding: 2%;
+}
+
+.block{
+    width: 17%;
+    border-color: #ff7f35;
+    border-style: solid;
+    margin-top: 78%;
+    color: #ff7f35;
+    padding: 2%;
+    margin-left: 35%;
+    padding-right: 4%;
 }
