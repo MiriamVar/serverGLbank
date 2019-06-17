@@ -253,3 +253,46 @@ class Databaza(object):
                 cur1.close()
                 connection_object.close()
                 print("MySQL connection is closed")
+
+    def sentMoney(self, idAcc, recipient, amount):
+        connection_object = self.connection_pool.get_connection()
+        if connection_object.is_connected():
+            db_info = connection_object.get_server_info()
+            print("Connected to MySQL database using connection pool ... MySQL Server version on ", db_info)
+
+            cur1 = connection_object.cursor()
+            queryUpdateM = 'update account set account.amount = account.amount - %s where account.id like %s'
+            cur1.execute(queryUpdateM, (amount,idAcc))
+            print("odchadzaju z mojho uctu peniaze")
+            print("affected rows = {}".format(cur1.rowcount))
+            rows = format(cur1.rowcount)
+            if rows == 1:
+                cur2 = connection_object.cursor()
+                queryUpdateR = 'update account set account.amount = account.amount + %s where account.accnum like %s'
+                cur2.execute(queryUpdateR, (amount, recipient))
+                print("prichadyaju druhemu na ucet")
+                print("affected rows = {}".format(cur2.rowcount))
+                rows2 = format(cur2.rowcount)
+                if rows2 == 1:
+                    cur3 = connection_object.cursor()
+                    queryInsertPay = 'insert into transaction (idacc, idemployee, recaccount, transamount) values ' \
+                                     '("%s", "null", "%s ", "%s")'
+                    cur1.execute(queryInsertPay, (idAcc, recipient, amount))
+                    print("posielanie transakcii sa zapisuje")
+                    print("affected rows = {}".format(cur3.rowcount))
+                    rows3 = format(cur3.rowcount)
+                    if rows3 == 1:
+                        if (connection_object.is_connected()):
+                            cur1.close()
+                            cur2.close()
+                            cur3.close()
+                            connection_object.close()
+                            print("MySQL connection is closed")
+                    else:
+                        print("nezbehol insert")
+                else:
+                    print("nepridalo penize")
+            else:
+                print("nezobralo peniaze")
+
+

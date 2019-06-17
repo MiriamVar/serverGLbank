@@ -400,6 +400,7 @@ def blockingcard():
         return jsonify({"status": "wrong credentials"})
 
 
+#ide
 @app.route("/trans", methods=["POST"])
 def transactions2():
     token = ""
@@ -433,6 +434,30 @@ def transactions2():
         return trans2
     else:
         return jsonify({"status": "wrong credentials"})
+
+
+@app.route("/sendMoney", methods=["POST"])
+def sendingMoney():
+    token = ""
+    id = ""
+    print(id)
+    if request.is_json:
+        content = request.get_json()
+        token = content["token"]
+        id = content["id"]
+        idAcc = content["idAcc"]
+        amount = content["amount"]
+        recNum = content["recNum"]
+    else:
+        return jsonify({"status": "wrong request"})
+
+    if amount is not None and recNum is not None:
+        print("dostanem sa tu ... na posielanie penazi")
+        db.sentMoney(idAcc=idAcc, recipient=recNum, amount=amount)
+        print("info o karte... jedenasta  route")
+        return jsonify({"status": "OK"})
+    else:
+        return jsonify({"status": "wrong request druhy"})
 
 
 def isValidTokenAndId(token, id):

@@ -257,7 +257,7 @@ function showingCards(){
 }
 
 function showingPay(){
-   document.getElementById('mainDiv').style.display = "none";
+    document.getElementById('mainDiv').style.display = "none";
     document.getElementById('userProfile').style.display ="none";
     document.getElementById('containerAccounts').style.display ="none";
     document.getElementById('containerCards').style.display ="none";
@@ -362,4 +362,20 @@ function loadTransactions2(){
         }
         }
      });
+}
+
+function sendingMoney(){
+    let data = {token : window.tokenSecret, id : window.userID, idAcc: idacc, amount: $("#moneyToSent").val(), recNum: $("#recipient").val()};
+    data = JSON.stringify(data);
+    console.log(data);
+    $.ajax({
+      type: 'POST',
+      url: "/accountsinfo",
+      data: data,
+      contentType:"application/json; charset=utf-8",
+        dataType:"json",
+      success: function(resultData) {
+
+      }
+  });
 }
