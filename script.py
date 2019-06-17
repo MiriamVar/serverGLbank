@@ -341,6 +341,7 @@ def transactions():
         return jsonify({"status": "wrong credentials"})
 
 
+#ide
 @app.route("/changepassword", methods=["POST"])
 def changePass():
     token = ""
@@ -377,16 +378,18 @@ def changePass():
 
 @app.route("/blockcard", methods=["POST"])
 def blockingcard():
+    print("vojdem to blokovania karty")
     token = ""
     id = ""
     if request.is_json:
         content = request.get_json()
         token = content["token"]
         id = content["id"]
+        accId = content["accId"]
     else:
         return jsonify({"status": "wrong request"})
 
-    accId = getAccid(token, id)
+    print(accId)
     if accId is not None:
         print("dostanem sa tu")
         db.blockCard(idAcc=accId)

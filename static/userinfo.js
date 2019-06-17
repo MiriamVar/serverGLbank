@@ -268,9 +268,9 @@ function makeCardDiv(data){
   else{
     active = "True";
   }
-  let smallDivCard = $('<div class="smallDivCard"><div class="credentialsAcc"><label class="accOwner">Account ID:  <span class="numberA">'+data[1]+'</span></label></div><hr style="margin-top: 0px;"><label class="accOwner"> PIN: <span class="numberA">'+data[2]+'</span></label><div class="accOwner">Expire Date: <span class="numberA">'+data[3]+'</span> <span id="slash">/</span><span class="numberA">'+data[4]+'</span></div><label class="accOwner"> Active: <span class="numberA">'+active+'</span></label><div class="block">Block</div></div></div>');
+  let smallDivCard = $('<div class="smallDivCard"><div class="credentialsAcc"><label class="accOwner">Account ID:  <span class="numberA">'+data[1]+'</span></label></div><hr style="margin-top: 0px;"><label class="accOwner"> PIN: <span class="numberA">'+data[2]+'</span></label><div class="accOwner">Expire Date: <span class="numberA">'+data[3]+'</span> <span id="slash">/</span><span class="numberA">'+data[4]+'</span></div><label class="accOwner"> Active: <span id="activeCH" class="numberA">'+active+'</span></label><div class="block">Block</div></div></div>');
   $("div").click(function(){
-    $(".block").attr("onclick", "blockingCard('data')");
+    $(".block").attr("onclick", "blockingCard("+data[1]+")");
   });
   container.append(smallDivCard);
 }
@@ -281,16 +281,24 @@ function clearInputs(){
     $('#confirmPassword').val('');
 }
 
-function blockingCard(data){
-    let data2 = {token : window.tokenSecret, id : window.userID,};
-    data3 = JSON.stringify(data2);
-    console.log(data3);
+function blockingCard(num){
+    let data = {token : window.tokenSecret, id : window.userID, accId: num, };
+    data = JSON.stringify(data);
+    console.log(data);
     $.ajax({
       type: 'POST',
       url: "/blockcard",
       data: data,
       contentType:"application/json; charset=utf-8",
         dataType:"json",
-      success: function(resultData) {}
+      success: function(resultData) {
+      console.log(resultData);
+      console.log("block urobeny");
+      var obj = JSON.stringify(resultData);
+      console.log(obj);
+      if (obj.status = "OK"){
+        $("#activeCH").text("False");
+      }
+      }
   });
 }
