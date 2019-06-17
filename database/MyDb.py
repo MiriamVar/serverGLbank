@@ -228,15 +228,16 @@ class Databaza(object):
             db_info = connection_object.get_server_info()
             print("Connected to MySQL database using connection pool ... MySQL Server version on ", db_info)
             cur1 = connection_object.cursor()
-            queryTrans = 'select * from transaction where recAccount = %s'
+            queryTrans = 'select * from transaction inner join account on transaction.idacc = account.id and ' \
+                         'recAccount = %s'
             cur1.execute(queryTrans, (recAcc,))
-            infoTrans = cur1.fetchall()
-            print("z db", infoTrans)
+            infoTrans2 = cur1.fetchall()
+            print("z db trans2", infoTrans2)
             if (connection_object.is_connected()):
                 cur1.close()
                 connection_object.close()
                 print("MySQL connection is closed")
-                return infoTrans
+                return infoTrans2
 
     def blockCard(self, idAcc):
         connection_object = self.connection_pool.get_connection()

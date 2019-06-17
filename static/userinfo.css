@@ -360,3 +360,18 @@ td{
 #error{
     margin: 17%;
 }
+
+#createPay{
+    margin-left: 35%;
+    margin-top: 12%;
+    height:25%;
+}
+
+#cred{
+    height: 40px;
+}
+
+#btnSentMoney{
+    margin-left: 50%;
+    margin-bottom: 3%;
+}

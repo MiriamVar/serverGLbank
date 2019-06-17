@@ -376,6 +376,7 @@ def changePass():
         return jsonify({"status": "wrong request druhy"})
 
 
+#ide
 @app.route("/blockcard", methods=["POST"])
 def blockingcard():
     print("vojdem to blokovania karty")
@@ -395,6 +396,41 @@ def blockingcard():
         db.blockCard(idAcc=accId)
         print("blokovanie karty .. deviata route")
         return jsonify({"status": "OK"})
+    else:
+        return jsonify({"status": "wrong credentials"})
+
+
+@app.route("/trans", methods=["POST"])
+def transactions2():
+    token = ""
+    id = ""
+    print(id)
+    if request.is_json:
+        content = request.get_json()
+        token = content["token"]
+        id = content["id"]
+    else:
+        return jsonify({"status": "wrong request"})
+
+    recAcc = getAccnum(token,id)
+    print("transaction recAcc ma vypisat")
+    print(recAcc)
+    if recAcc is not None:
+        print("dostanem sa tu")
+        infotrans2 = db.getTrans2(recAcc=recAcc)
+        print(infotrans2)
+        trans = []
+
+        for row in infotrans2:
+            trans.append(row)
+            print(row)
+
+        trans2 = json.dumps(trans, separators=(',', ':'))
+        print("JSON transactions")
+        print(trans2)
+
+        print("info o transactions.. desiata  route")
+        return trans2
     else:
         return jsonify({"status": "wrong credentials"})
 

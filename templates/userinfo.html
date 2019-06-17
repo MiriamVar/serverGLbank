@@ -36,7 +36,7 @@
           </div>
             <hr style="margin-top: 0px;">
             <label id="lblBal"> Current Balance: <span id="currBal"></span><span id="euro">€</span></label>
-            <div id="payment" onclick="">Payment</div>
+            <div id="payment" onclick="showingPay()">Payment</div>
         </div>
         <div id="secondSmallDiv">
           <div id="incExp">
@@ -102,6 +102,18 @@
 
 <div id="containerAccounts"></div>
 <div id="containerCards"></div>
+
+<div id="createPay" class="smallDivAcc">
+    <div id="cred" class="credentialsAcc">
+        <p class="pInfo"> Create Payment</p>
+    </div>
+    <hr style="margin-top: 0px;">
+    <div>
+        <label class="lblChangePass">Money <input id="moneyToSent"  type="tetx" required="" ></label>
+        <label class="lblChangePass">Account of recipient <input id="recipient"  type="text" required="" ></label>
+    </div>
+    <button id="btnSentMoney" onclick="sendingMoney()">OK</button>
+</div>
 
 </body>
 </html>

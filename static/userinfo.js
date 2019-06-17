@@ -14,6 +14,7 @@ $(document).ready(function(){
   document.getElementById('userProfile').style.display= "none";
   document.getElementById('containerAccounts').style.display ="none";
   document.getElementById('containerCards').style.display ="none";
+  document.getElementById('createPay').style.display ="none";
 
 });
 
@@ -50,6 +51,7 @@ function loadAccountes(){
             accinfo(accnum);
             loadTransactions();
             loadCards();
+            loadTransactions2();
         }
         else{
             $("#accNumber").text("You don't have any accounts.");
@@ -225,6 +227,7 @@ function hiding(){
     document.getElementById('userProfile').style.display ="block";
     document.getElementById('containerAccounts').style.display ="none";
     document.getElementById('containerCards').style.display ="none";
+    document.getElementById('createPay').style.display ="none";
 }
 
 function showing(){
@@ -232,6 +235,7 @@ function showing(){
     document.getElementById('userProfile').style.display ="none";
     document.getElementById('containerAccounts').style.display ="none";
     document.getElementById('containerCards').style.display ="none";
+    document.getElementById('createPay').style.display ="none";
 }
 
 function showingAcc(){
@@ -239,6 +243,7 @@ function showingAcc(){
     document.getElementById('userProfile').style.display ="none";
     document.getElementById('containerAccounts').style.display ="block";
     document.getElementById('containerCards').style.display ="none";
+    document.getElementById('createPay').style.display ="none";
     accountsMenu();
 }
 
@@ -247,13 +252,25 @@ function showingCards(){
     document.getElementById('userProfile').style.display ="none";
     document.getElementById('containerAccounts').style.display ="none";
     document.getElementById('containerCards').style.display ="block";
+    document.getElementById('createPay').style.display ="none";
     cardsMenu();
+}
+
+function showingPay(){
+   document.getElementById('mainDiv').style.display = "none";
+    document.getElementById('userProfile').style.display ="none";
+    document.getElementById('containerAccounts').style.display ="none";
+    document.getElementById('containerCards').style.display ="none";
+    document.getElementById('createPay').style.display ="block";
 }
 
 function makeAccountDiv(data){
   console.log("data v make accoutns... vytvaraju na tabulky s datami");
   let container = $("#containerAccounts");
-  let smallDivAcc = $('<div class="smallDivAcc"><div class="credentialsAcc"><label class="accOwner">Account Number:  <span class="numberA">'+data[2]+'</span></label></div><hr style="margin-top: 0px;"><label class="balanceCur"> Current Balance: <span class="money">'+data[3]+'</span><span id="euro">€</span></label><div class="pay" onclick="">Payment</div></div>');
+  let smallDivAcc = $('<div class="smallDivAcc"><div class="credentialsAcc"><label class="accOwner">Account Number:  <span class="numberA">'+data[2]+'</span></label></div><hr style="margin-top: 0px;"><label class="balanceCur"> Current Balance: <span class="money">'+data[3]+'</span><span id="euro">€</span></label><div class="pay">Payment</div></div>');
+    $("div").click(function(){
+    $(".pay").attr("onclick", "showingPay()");
+  });
   container.append(smallDivAcc);
 }
 
@@ -301,4 +318,48 @@ function blockingCard(num){
       }
       }
   });
+}
+
+function loadTransactions2(){
+    let data = {token : window.tokenSecret, id : window.userID,};
+    data = JSON.stringify(data);
+    console.log(data);
+    $.ajax({
+      type: 'POST',
+      url: "/trans",
+      data: data,
+      contentType:"application/json; charset=utf-8",
+        dataType:"json",
+      success: function(resultData) {
+        transactions = resultData;
+        console.log(resultData);
+        console.log("ma urobit cyklus")
+        console.log(resultData.length)
+        if(resultData.length > 0){
+            var table = document.getElementById("tbltrans");
+            for(var i=1; i<resultData.length; i++){
+                var row = table.insertRow(i);
+
+                var cell1 = row.insertCell(0);
+                cell1.innerHTML = resultData[i][1];
+
+                var cell2 = row.insertCell(0+1);
+                cell2.innerHTML = resultData[i][2];
+
+                var cell3 = row.insertCell(0+2);
+                var stringDate = (resultData[i][4]);
+                console.log("string date .. jaky vytiahnem");
+                console.log(stringDate);
+                var d = new Date(stringDate);
+                cell3.innerHTML = d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+("0" + d.getDate()).slice(-2)+" "+("0" + d.getHours()).slice(-2)+":"+("0" + d.getMinutes()).slice(-2)+":"+("0" + d.getSeconds()).slice(-2);
+
+                var cell4 = row.insertCell(0+3);
+                cell4.innerHTML = resultData[i][5];
+            }
+        }
+        else{
+            $("#allTrans").text("You don't have any transactions on this account.");
+        }
+        }
+     });
 }
