@@ -3,6 +3,7 @@ let accData = {};
 let accounts = {};
 let transaction = {};
 let cards = {};
+let accForPayment = "";
 
 
 $(document).ready(function(){
@@ -256,20 +257,21 @@ function showingCards(){
     cardsMenu();
 }
 
-function showingPay(){
+function showingPay(idAcc){
     document.getElementById('mainDiv').style.display = "none";
     document.getElementById('userProfile').style.display ="none";
     document.getElementById('containerAccounts').style.display ="none";
     document.getElementById('containerCards').style.display ="none";
     document.getElementById('createPay').style.display ="block";
+    accForPayment = idAcc;
 }
 
 function makeAccountDiv(data){
   console.log("data v make accoutns... vytvaraju na tabulky s datami");
   let container = $("#containerAccounts");
-  let smallDivAcc = $('<div class="smallDivAcc"><div class="credentialsAcc"><label class="accOwner">Account Number:  <span class="numberA">'+data[2]+'</span></label></div><hr style="margin-top: 0px;"><label class="balanceCur"> Current Balance: <span class="money">'+data[3]+'</span><span id="euro">€</span></label><div class="pay">Payment</div></div>');
+  let smallDivAcc = $('<div class="smallDivAcc"><div class="credentialsAcc"><label class="accOwner">Account Number:  <span class="numberA">'+data[2]+'</span></label></div><hr style="margin-top: 0px;"><label class="balanceCur"> Current Balance: <span class="money">'+data[3]+'</span><span id="euro">€</span></label><div id="acc'+data[0]+'" class="pay">Payment</div></div>');
     $("div").click(function(){
-    $(".pay").attr("onclick", "showingPay()");
+    $("#acc"+data[0]).attr("onclick", "showingPay("+data[0]+")");
   });
   container.append(smallDivAcc);
 }
@@ -365,12 +367,12 @@ function loadTransactions2(){
 }
 
 function sendingMoney(){
-    let data = {token : window.tokenSecret, id : window.userID, idAcc: idacc, amount: $("#moneyToSent").val(), recNum: $("#recipient").val()};
+    let data = {token : window.tokenSecret, id : window.userID, idAcc: accForPayment, amount: Number($("#moneyToSent").val()), recNum: $("#recipient").val()};
     data = JSON.stringify(data);
     console.log(data);
     $.ajax({
       type: 'POST',
-      url: "/accountsinfo",
+      url: "/sendMoney",
       data: data,
       contentType:"application/json; charset=utf-8",
         dataType:"json",
