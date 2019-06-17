@@ -176,7 +176,22 @@ function changePassword(){
       data: data,
       contentType:"application/json; charset=utf-8",
         dataType:"json",
-      success: function(resultData) {console.log(resultData); console.log("change urobeny");}
+      success: function(resultData) {
+      console.log(resultData);
+      console.log("change urobeny");
+      var obj = JSON.stringify(resultData);
+      console.log(obj);
+      if (obj.status = "OK"){
+        clearInputs();
+        $("#error").text("Your passsword has been changed.");
+        $('#error').css("color", "green");
+      }
+      else{
+        clearInputs();
+        $("#error").text("Your passsword has not been changed.");
+        $('#error').css("color", "red");
+      }
+      }
   });
 }
 
@@ -258,6 +273,12 @@ function makeCardDiv(data){
     $(".block").attr("onclick", "blockingCard('data')");
   });
   container.append(smallDivCard);
+}
+
+function clearInputs(){
+    $('#oldPassword').val('');
+    $('#newPassword').val('');
+    $('#confirmPassword').val('');
 }
 
 function blockingCard(data){

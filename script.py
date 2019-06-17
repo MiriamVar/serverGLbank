@@ -122,7 +122,7 @@ def register():
                     if user is None:
                         # insert do db - wrong
                         db.wrongInsert(idClient=idClient)
-                        return render_template("loginError.html", usernameErr="", passwordErr="Wrong Password.", blockedErr="")
+                        return render_template("loginError.html", passwordErr="Wrong Password.", blockedErr="")
                     else:
                         json_user.append({'id': user[0], 'name': user[1], 'surname': user[2], 'email': user[3]})
                         print("Userko")

@@ -35,6 +35,12 @@ input{
     height: 150px;
 }
 
-label{
-    text-decoration-color: red;
+.err{
+    color: red;
+    padding: 4%;
+}
+
+#userN{
+    margin:0%;
+    padding:0%;
 }
