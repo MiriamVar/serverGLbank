@@ -9,7 +9,8 @@
          var userID = {{ userID }};
     </script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
-    <script src="{{ url_for('static', filename='userinfo.js') }}"></script> 
+    <script src="{{ url_for('static', filename='userinfo.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
 </head>
 <body >
 <header>
@@ -39,11 +40,7 @@
 <!--            <div id="payment" onclick="showingPay()">Payment</div>-->
         </div>
         <div id="secondSmallDiv">
-          <div id="incExp">
-            <label id="lblInc">Incomes</label>
-            <label id="lblExp">Expenses</label>
-          </div>
-          <hr style="margin-top: 0px;">
+            <canvas id="expenses" width="500" height="300"></canvas>
         </div>
     </div>
     <div id="secondDiv">
@@ -51,15 +48,9 @@
           <label id="lblTrans"> Transactions</label>
       </div>
       <hr style="margin-top: 0px; margin-bottom: 0px">
-      <div id="allTrans" >
-        <table id="tbltrans">
-          <tr>
-            <th>Id Account</th>
-            <th>Rec Account</th>
-            <th>TransDate</th>
-            <th>TransAmount</th>
-          </tr>
-        </table>
+      <div id="allTrans">
+          <table id="allTransUP"></table>
+          <table id="tbltrans"></table>
       </div>
     </div>
 </div>
@@ -112,8 +103,47 @@
         <label class="lblChangePass">Money <input id="moneyToSent"  type="tetx" required="" ></label>
         <label class="lblChangePass">Account of recipient <input id="recipient"  type="text" required="" ></label>
     </div>
+    <label id="errPay"></label>
     <button id="btnSentMoney" onclick="sendingMoney()">OK</button>
 </div>
+
+<script>
+    var chart = document.getElementById("expenses");
+    var barChart = new Chart(chart, {
+  type: 'bar',
+  data:{
+    labels: ["January", "February", "March","April","May","June","July","August","September","October","November","December"],
+    datasets: [{
+          label: 'Income',
+          data: [],
+          backgroundColor: '#8ed18e',
+          borderWidth: 0,
+          yAxisID: "y-axis-density"
+    },{
+         label: 'Expenses',
+         data: [],
+         backgroundColor: '#f48484',
+         borderWidth: 0,
+         yAxisID: "y-axis-gravity"
+    }]
+  },
+  options: {
+   scales: {
+    xAxes: [{
+      barPercentage: 1,
+      categoryPercentage: 0.6
+    }],
+    yAxes: [{
+      id: "y-axis-density"
+    }, {
+      id: "y-axis-gravity"
+    }]
+   }
+  }
+});
+
+      expenses.data.datasets[1].data.push(resultData[i][5]);
+   </script>
 
 </body>
 </html>

@@ -278,8 +278,8 @@ def cards():
         return cards2
     else:
         return jsonify({"status": "wrong credentials"})
-#
-#
+
+
 # @app.route("/cardsinfo", methods=["POST"])
 # def cardsinfo():
 #     token = ""
@@ -291,18 +291,15 @@ def cards():
 #     else:
 #         return jsonify({"status": "wrong request"})
 #
-#     idcard = getCardID(token, id)
-#     if idcard is not None:
+#     idacc = getAccid(token, id)
+#     if idacc is not None:
 #         print("dostanem sa tu")
-#         infoCard = db.getOneCard(idcard=idcard)
+#         infoCard = db.getOneCard(accId=idacc)
 #         print(infoCard)
 #         print("info o karte... siedma  route")
-#         return jsonify({"cardId": infoCard[0], "accId": infoCard[1], "pin": infoCard[2],
-#                         "expirem": infoCard[3], "expirey": infoCard[4], "active": infoCard[5]})
+#         return jsonify({"numAccount": infoCard[0]})
 #     else:
 #         return jsonify({"status": "wrong credentials"})
-#
-#
 
 
 #ide

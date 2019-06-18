@@ -309,7 +309,7 @@ td{
 }
 
 #btnChangePass{
-    margin-left: 45%;
+    margin-left: 15%;
 }
 
 .numberA{
@@ -374,4 +374,13 @@ td{
 #btnSentMoney{
     margin-left: 50%;
     margin-bottom: 3%;
+}
+
+#errPay{
+    margin-left: 18%;
+}
+
+#tblTrans{
+    padding-left: 5%;
+    text-align: center;
 }

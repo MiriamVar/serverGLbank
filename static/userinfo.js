@@ -126,8 +126,24 @@ function loadTransactions(){
         console.log("ma urobit cyklus")
         console.log(resultData.length)
         if(resultData.length > 0){
+            var table = document.getElementById("allTransUP");
+            for(var j=0; j<1;j++){
+                var row = table.insertRow(j);
+                var cell = row.insertCell(0);
+                cell.innerHTML = "Id Account"
+
+                var cellO = row.insertCell(0+1);
+                cellO.innerHTML = "Rec Account"
+
+                var cellP = row.insertCell(0+2);
+                cellP.innerHTML = "TransDate"
+
+                var cellL = row.insertCell(0+3);
+                cellL.innerHTML = "TransAccount"
+            }
+
             var table = document.getElementById("tbltrans");
-            for(var i=1; i<resultData.length; i++){
+            for(var i=0; i<resultData.length; i++){
                 var row = table.insertRow(i);
 
                 var cell1 = row.insertCell(0);
@@ -144,7 +160,7 @@ function loadTransactions(){
                 cell3.innerHTML = d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+("0" + d.getDate()).slice(-2)+" "+("0" + d.getHours()).slice(-2)+":"+("0" + d.getMinutes()).slice(-2)+":"+("0" + d.getSeconds()).slice(-2);
 
                 var cell4 = row.insertCell(0+3);
-                cell4.innerHTML = resultData[i][5];
+                cell4.innerHTML ="+"+resultData[i][5];
             }
         }
         else{
@@ -300,6 +316,11 @@ function clearInputs(){
     $('#confirmPassword').val('');
 }
 
+function clearInputsPay(){
+    $('#moneyToSent').val('');
+    $('#recipient').val('');
+}
+
 function blockingCard(num){
     let data = {token : window.tokenSecret, id : window.userID, accId: num, };
     data = JSON.stringify(data);
@@ -356,7 +377,7 @@ function loadTransactions2(){
                 cell3.innerHTML = d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+("0" + d.getDate()).slice(-2)+" "+("0" + d.getHours()).slice(-2)+":"+("0" + d.getMinutes()).slice(-2)+":"+("0" + d.getSeconds()).slice(-2);
 
                 var cell4 = row.insertCell(0+3);
-                cell4.innerHTML = resultData[i][5];
+                cell4.innerHTML ="-"+resultData[i][5];
             }
         }
         else{
@@ -377,7 +398,20 @@ function sendingMoney(){
       contentType:"application/json; charset=utf-8",
         dataType:"json",
       success: function(resultData) {
-
+        console.log(resultData);
+        console.log("peniaze poslane");
+        var obj = JSON.stringify(resultData);
+        console.log(obj);
+         if (obj.status = "OK"){
+            clearInputsPay();
+            $("#errPay").text("Your payment was successful.");
+            $('#errPay').css("color", "green");
+         }
+        else{
+            clearInputsPay();
+            $("#errPay").text("Your payment was not successful.");
+            $('#errPay').css("color", "red");
+        }
       }
   });
 }
