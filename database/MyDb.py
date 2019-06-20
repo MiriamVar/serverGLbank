@@ -13,20 +13,6 @@ class Databaza(object):
             host=dbConf["host"], port=dbConf["port"], database=dbConf["database"],
             user=dbConf["user"], password=dbConf["password"])
 
-    #
-    # def __getDb__(self):
-    #     if self.db.is_connected():
-    #         print("connected")
-    #         return
-    #     else:
-    #         self.db = self.__connect__()
-    #         return self.db
-    #
-    # def __connect__(self):
-    #     return mysql.connector.connect(host=dbConf["host"], port=dbConf["port"], database=dbConf["database"],
-    #
-    #                                   user=dbConf["user"], password=dbConf["password"])
-
     connection_pool = mysql.connector.pooling.MySQLConnectionPool(
         pool_name="pynative_pool", pool_size=5, pool_reset_session=True,
         host=dbConf["host"], port=dbConf["port"], database=dbConf["database"],
@@ -62,6 +48,22 @@ class Databaza(object):
                 connection_object.close()
                 print("MySQL connection is closed")
                 return userLogin
+
+    def LoginID(self, idClient ):
+        # todo: add password
+        connection_object = self.connection_pool.get_connection()
+        if connection_object.is_connected():
+            db_info = connection_object.get_server_info()
+            print("Connected to MySQL database using connection pool ... MySQL Server version on ", db_info)
+            cur1 = connection_object.cursor()
+            queryLogin = "select id from loginclient where idc = %s;"
+            cur1.execute(queryLogin, (idClient,))
+            userLoginID = cur1.fetchone()
+            if (connection_object.is_connected()):
+                cur1.close()
+                connection_object.close()
+                print("MySQL connection is closed")
+                return userLoginID
 
     def InsertToDb(self, idClient):
         connection_object = self.connection_pool.get_connection()

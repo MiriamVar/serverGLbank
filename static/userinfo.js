@@ -4,6 +4,8 @@ let accounts = {};
 let transaction = {};
 let cards = {};
 let accForPayment = "";
+let transactions1 ={};
+let transactions2 = {};
 
 
 $(document).ready(function(){
@@ -16,7 +18,6 @@ $(document).ready(function(){
   document.getElementById('containerAccounts').style.display ="none";
   document.getElementById('containerCards').style.display ="none";
   document.getElementById('createPay').style.display ="none";
-
 });
 
 
@@ -35,6 +36,7 @@ function userinfo(){
 }
 
 function loadAccountes(){
+    console.log("loaduju sa accounty");
     let data = {token : window.tokenSecret, id : window.userID};
     data = JSON.stringify(data);
     console.log(data);
@@ -63,6 +65,7 @@ function loadAccountes(){
 }
 
 function loadCards(){
+    console.log("loaduju sa karty");
     let data = {token : window.tokenSecret, id : window.userID};
     data = JSON.stringify(data);
     console.log(data);
@@ -111,6 +114,7 @@ function accinfo(accnum){
 }
 
 function loadTransactions(){
+    console.log("loaduju sa prve trans");
     let data = {token : window.tokenSecret, id : window.userID};
     data = JSON.stringify(data);
     console.log(data);
@@ -121,7 +125,7 @@ function loadTransactions(){
       contentType:"application/json; charset=utf-8",
         dataType:"json",
       success: function(resultData) {
-        transactions = resultData;
+        transactions1 = resultData;
         console.log(resultData);
         console.log("ma urobit cyklus")
         console.log(resultData.length)
@@ -344,6 +348,7 @@ function blockingCard(num){
 }
 
 function loadTransactions2(){
+    console.log("loaduju sa druhe trans");
     let data = {token : window.tokenSecret, id : window.userID,};
     data = JSON.stringify(data);
     console.log(data);
@@ -354,7 +359,7 @@ function loadTransactions2(){
       contentType:"application/json; charset=utf-8",
         dataType:"json",
       success: function(resultData) {
-        transactions = resultData;
+        transactions2 = resultData;
         console.log(resultData);
         console.log("ma urobit cyklus")
         console.log(resultData.length)
@@ -378,7 +383,9 @@ function loadTransactions2(){
 
                 var cell4 = row.insertCell(0+3);
                 cell4.innerHTML ="-"+resultData[i][5];
+
             }
+            createChart();
         }
         else{
             $("#allTrans").text("You don't have any transactions on this account.");
@@ -414,4 +421,58 @@ function sendingMoney(){
         }
       }
   });
+}
+
+function createChart(){
+     console.log("vytvara sa chart");
+     console.log(transactions1);
+     console.log(transactions2);
+     var chart = document.getElementById("expenses").getContext('2d');
+     var expense = [];
+     var income = [];
+
+      for(var i=0; i<transactions1.length;i++){
+        expense = transactions1[i][5];
+    }
+    for(var j=0; j<transactions2.length;j++){
+        income = transactions2[j][5];
+    }
+    console.log("incomes");
+    console.log(income);
+    console.log("expenses");
+    console.log(expense);
+
+    let barChart = new Chart(chart, {
+        type: 'bar',
+        data:{
+            labels: ["January", "February", "March","April","May","June","July","August","September","October","November","December"],
+            datasets: [{
+                label: 'Income',
+                data: income,
+                backgroundColor: '#8ed18e',
+                borderWidth: 0,
+                yAxisID: "y-axis-density"
+            },{
+                label: 'Expenses',
+                data: expense,
+                backgroundColor: '#f48484',
+                borderWidth: 0,
+                yAxisID: "y-axis-gravity"
+            }]
+        },
+        options: {
+            scales: {
+            xAxes: [{
+                barPercentage: 1,
+                categoryPercentage: 0.6
+            }],
+            yAxes: [{
+                id: "y-axis-density"
+            }, {
+                id: "y-axis-gravity"
+            }]
+            }
+        }
+    });
+
 }

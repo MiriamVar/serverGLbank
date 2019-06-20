@@ -107,43 +107,5 @@
     <button id="btnSentMoney" onclick="sendingMoney()">OK</button>
 </div>
 
-<script>
-    var chart = document.getElementById("expenses");
-    var barChart = new Chart(chart, {
-  type: 'bar',
-  data:{
-    labels: ["January", "February", "March","April","May","June","July","August","September","October","November","December"],
-    datasets: [{
-          label: 'Income',
-          data: [],
-          backgroundColor: '#8ed18e',
-          borderWidth: 0,
-          yAxisID: "y-axis-density"
-    },{
-         label: 'Expenses',
-         data: [],
-         backgroundColor: '#f48484',
-         borderWidth: 0,
-         yAxisID: "y-axis-gravity"
-    }]
-  },
-  options: {
-   scales: {
-    xAxes: [{
-      barPercentage: 1,
-      categoryPercentage: 0.6
-    }],
-    yAxes: [{
-      id: "y-axis-density"
-    }, {
-      id: "y-axis-gravity"
-    }]
-   }
-  }
-});
-
-      expenses.data.datasets[1].data.push(resultData[i][5]);
-   </script>
-
 </body>
 </html>

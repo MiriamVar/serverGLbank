@@ -61,93 +61,106 @@ def register():
     login = request.form.get("name")
     passswap = request.form.get("pass")
     if login == "" or login is None or passswap == "" or passswap is None:
-        return jsonify({"mess": "blud"})
+        return jsonify({"mess": "blud"})  #nedojde k tomu .. ale pre istotu
+
     encoder = hashlib.md5()
     encoder.update(passswap.encode('utf-8'))
     password = encoder.hexdigest()
     print(password)
-    # password = hashlib.md5(passswap.encode()).hexdigest()
-    # encoder = hashlib.md5()
-    # encoder.update(passswap)
-    # password = encoder.hexdigest()
-    print(password)
+
     if not login or not password:
         return render_template("loginError.html", usernameErr="", passwordErr="", blockedErr="Wrong username or password.")
 
     # overenie ci taky client podla loginu existuje
     userLogin = db.Login(login=login)
-
+    print("userLogin")
     print(userLogin)
+
     if userLogin is None:
         # user neexistuje
         return render_template("loginError.html", usernameErr="Wrong username.", passwordErr="", blockedErr="")
     else:
         idClient = userLogin[0]
+        print("toto by malo byt id clienta ale malo by to byt idl")
         print(idClient)
+        idLoginID = db.LoginID(idClient=idClient)
+        idLogin = idLoginID[0]
+        print("toto by malo byt idl")
+        print(idLogin)
 
-        # overuje blokovania uctu
-        records = db.AccountIsBlocked(idClient=idClient)
-        print(records)
-        if not records:
-            # insert do db - right
-            db.InsertToDb(idClient=idClient)
+        # overuje sa ucet
+        user = db.verification(login=login, password=password)
+        print("User")
+        print(user)
 
-            # generate token
-            token = secrets.token_urlsafe()
-
-            client = UserToken(clientId=idClient, clientToken=token, clientLogin=login)
-            tokens.append(client)
-
-            return render_template("userinfo.html", token=token, userID=idClient)
+        if user is None:
+            # insert do db - wrong
+            db.wrongInsert(idClient=idLogin)
+            return render_template("loginError.html", passwordErr="Wrong Password.", blockedErr="")
         else:
-            success = []
-            for row in records:
-                print(row)
-                print(row[2])
-                success.append(row[2])
+            # overuje blokovania uctu
+            records = db.AccountIsBlocked(idClient=idLogin)
+            print(records)
+            if not records:
+                # insert do db - right
+                db.InsertToDb(idClient=idLogin)
 
-            # if last record is not null
-            if success[0] is not None:
-                # success ci sa == 1 alebo sa da zretazit ??
-                if success[0] == 1 and success[1] == 1 and success[2] == 1:
-                    return render_template("loginError.html", usernameErr="", passwordErr="", blockedErr="Your IB is blocked.")
-                else:
-                    # "Your IB is unblocked"
+                # generate token
+                token = secrets.token_urlsafe()
 
-                    # overuje sa ucet
-                    user = db.verification(login=login, password=password)
-                    print("User")
-                    print(user)
+                client = UserToken(clientId=idClient, clientToken=token, clientLogin=login)
+                tokens.append(client)
 
-                    if user is None:
-                        # insert do db - wrong
-                        db.wrongInsert(idClient=idClient)
-                        return render_template("loginError.html", passwordErr="Wrong Password.", blockedErr="")
-                    else:
-                        json_user.append({'id': user[0], 'name': user[1], 'surname': user[2], 'email': user[3]})
-                        print("Userko")
-                        print(json.dumps({'user': json_user}))
-
-                        # insert do db - right
-                        db.InsertToDb(idClient=idClient)
-
-                        # generate token
-                        token = secrets.token_urlsafe()
-
-                        client = UserToken(clientId=idClient, clientToken=token, clientLogin=login)
-                        tokens.append(client)
-
-                        print(client.clientId)
-                        print(client.clientToken)
-                        print("clienta by malo vypisat")
-                        print(tokens[0].clientId)
-                        print(tokens[0].clientToken)
-
-                        return render_template("userinfo.html", token=token, userID=idClient)
-
+                return render_template("userinfo.html", token=token, userID=idClient)
             else:
-                return render_template("loginError.html", usernameErr="", passwordErr="",
-                                       blockedErr="Your IB is blocked by Bank Employee.")
+                success = []
+                for row in records:
+                    print(row)
+                    print(row[2])
+                    success.append(row[2])
+
+                # if last record is not null
+                if success[0] is not None:
+                    # success ci sa == 1 alebo sa da zretazit ??
+                    if success[0] == 0 and success[1] == 0 and success[2] == 0:
+                        return render_template("loginError.html", usernameErr="", passwordErr="", blockedErr="Your IB is blocked.")
+                    else:
+                        # "Your IB is unblocked"
+
+                        # overuje sa ucet
+                        user = db.verification(login=login, password=password)
+                        print("User")
+                        print(user)
+
+                        if user is None:
+                            # insert do db - wrong
+                            db.wrongInsert(idClient=idLogin)
+                            return render_template("loginError.html", passwordErr="Wrong Password.", blockedErr="")
+                        else:
+                            json_user.append({'id': user[0], 'name': user[1], 'surname': user[2], 'email': user[3]})
+                            print("Userko")
+                            print(json.dumps({'user': json_user}))
+
+                            # insert do db - right
+                            db.InsertToDb(idClient=idLogin)
+
+                            # generate token
+                            token = secrets.token_urlsafe()
+
+                            client = UserToken(clientId=idClient, clientToken=token, clientLogin=login)
+                            tokens.append(client)
+
+                            print(client.clientId)
+                            print(client.clientToken)
+                            print("clienta by malo vypisat")
+                            print(tokens[0].clientId)
+                            print(tokens[0].clientToken)
+
+                            return render_template("userinfo.html", token=token, userID=idClient)
+
+                else:
+                    return render_template("loginError.html", usernameErr="", passwordErr="",
+                                           blockedErr="Your IB is blocked by Bank Employee.")
 
 
 # ide
