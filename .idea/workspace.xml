@@ -3,8 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="86e59a2f-8945-4888-a7bb-9e3b8f9101a8" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/MyDb.py" beforeDir="false" afterPath="$PROJECT_DIR$/database/MyDb.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/script.py" beforeDir="false" afterPath="$PROJECT_DIR$/script.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/static/userinfo.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/userinfo.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/userinfo.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/userinfo.html" afterDir="false" />
     </list>
@@ -33,7 +31,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/script.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1468">
+            <state relative-caret-position="17">
               <caret line="78" column="16" selection-start-line="78" selection-start-column="16" selection-end-line="78" selection-end-column="16" />
               <folding>
                 <element signature="e#0#22#0" expanded="true" />
@@ -45,7 +43,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/database/MyDb.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-782">
+            <state relative-caret-position="374">
               <caret line="26" column="68" selection-start-line="26" selection-start-column="68" selection-end-line="26" selection-end-column="68" />
               <folding>
                 <element signature="e#0#22#0" expanded="true" />
@@ -57,8 +55,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/static/userinfo.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3">
-              <caret line="458" column="31" lean-forward="true" selection-start-line="458" selection-start-column="31" selection-end-line="458" selection-end-column="31" />
+            <state relative-caret-position="425">
+              <caret line="451" column="14" selection-start-line="451" selection-start-column="14" selection-end-line="451" selection-end-column="14" />
             </state>
           </provider>
         </entry>
@@ -66,8 +64,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/templates/userinfo.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="266">
-              <caret line="107" column="6" selection-start-line="107" selection-start-column="6" selection-end-line="107" selection-end-column="6" />
+            <state relative-caret-position="-442">
+              <caret line="10" column="92" selection-start-line="10" selection-start-column="92" selection-end-line="10" selection-end-column="92" />
               <folding>
                 <element signature="n#style#0;n#hr#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#hr#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -169,9 +167,9 @@
         <option value="$PROJECT_DIR$/templates/loginError.html" />
         <option value="$PROJECT_DIR$/static/loginError.css" />
         <option value="$PROJECT_DIR$/static/userinfo.css" />
-        <option value="$PROJECT_DIR$/templates/userinfo.html" />
         <option value="$PROJECT_DIR$/database/MyDb.py" />
         <option value="$PROJECT_DIR$/script.py" />
+        <option value="$PROJECT_DIR$/templates/userinfo.html" />
         <option value="$PROJECT_DIR$/static/userinfo.js" />
       </list>
     </option>
@@ -179,7 +177,7 @@
   <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="-10" />
     <option name="y" value="-10" />
-    <option name="width" value="979" />
+    <option name="width" value="980" />
     <option name="height" value="1040" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -560,6 +558,16 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/database/MyDb.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="374">
+          <caret line="26" column="68" selection-start-line="26" selection-start-column="68" selection-end-line="26" selection-end-column="68" />
+          <folding>
+            <element signature="e#0#22#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/static/userinfo.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2448">
@@ -569,18 +577,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/script.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1468">
+        <state relative-caret-position="17">
           <caret line="78" column="16" selection-start-line="78" selection-start-column="16" selection-end-line="78" selection-end-column="16" />
-          <folding>
-            <element signature="e#0#22#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/database/MyDb.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-782">
-          <caret line="26" column="68" selection-start-line="26" selection-start-column="68" selection-end-line="26" selection-end-column="68" />
           <folding>
             <element signature="e#0#22#0" expanded="true" />
           </folding>
@@ -589,8 +587,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/templates/userinfo.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="266">
-          <caret line="107" column="6" selection-start-line="107" selection-start-column="6" selection-end-line="107" selection-end-column="6" />
+        <state relative-caret-position="-442">
+          <caret line="10" column="92" selection-start-line="10" selection-start-column="92" selection-end-line="10" selection-end-column="92" />
           <folding>
             <element signature="n#style#0;n#hr#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#hr#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -601,8 +599,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/static/userinfo.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3">
-          <caret line="458" column="31" lean-forward="true" selection-start-line="458" selection-start-column="31" selection-end-line="458" selection-end-column="31" />
+        <state relative-caret-position="425">
+          <caret line="451" column="14" selection-start-line="451" selection-start-column="14" selection-end-line="451" selection-end-column="14" />
         </state>
       </provider>
     </entry>

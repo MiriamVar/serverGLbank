@@ -431,16 +431,19 @@ function createChart(){
      var expense = [];
      var income = [];
 
-      for(var i=0; i<transactions1.length;i++){
-        expense = transactions1[i][5];
+      for(var i=0; i<transactions2.length;i++){
+        swap_expense = transactions2[i][5];
+        expense.push(swap_expense);
     }
-    for(var j=0; j<transactions2.length;j++){
-        income = transactions2[j][5];
+    for(var j=0; j<transactions1.length;j++){
+        swap_income = transactions1[j][5];
+        income.push(swap_income);
     }
     console.log("incomes");
     console.log(income);
     console.log("expenses");
     console.log(expense);
+
 
     let barChart = new Chart(chart, {
         type: 'bar',
@@ -451,28 +454,13 @@ function createChart(){
                 data: income,
                 backgroundColor: '#8ed18e',
                 borderWidth: 0,
-                yAxisID: "y-axis-density"
             },{
                 label: 'Expenses',
                 data: expense,
                 backgroundColor: '#f48484',
                 borderWidth: 0,
-                yAxisID: "y-axis-gravity"
             }]
         },
-        options: {
-            scales: {
-            xAxes: [{
-                barPercentage: 1,
-                categoryPercentage: 0.6
-            }],
-            yAxes: [{
-                id: "y-axis-density"
-            }, {
-                id: "y-axis-gravity"
-            }]
-            }
-        }
     });
 
 }
