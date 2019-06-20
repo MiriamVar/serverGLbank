@@ -90,7 +90,7 @@ float:right;
 #secondSmallDiv{
   width: 100%;
   background-color: white;
-  height:300px;
+  height:300px !important;
   margin-top: 4%;
   float: left;
 }
@@ -228,7 +228,7 @@ td{
   display: block;
   margin-left: 10%;
   margin-right: 5%;
-  margin-top: 7.5%;
+  margin-top: 8%;
   float: left;
 }
 

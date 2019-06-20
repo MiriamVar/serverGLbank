@@ -14,6 +14,15 @@ $(document).ready(function(){
   $("#btnLogout").click(function() {
     logout();
   });
+   $("#btnHome").click(function() {
+    userinfo();
+  });
+   $("#btnAccounts").click(function() {
+    loadAccountes();
+  });
+   $("#btnCards").click(function() {
+    loadAccountes();
+  });
   document.getElementById('userProfile').style.display= "none";
   document.getElementById('containerAccounts').style.display ="none";
   document.getElementById('containerCards').style.display ="none";
@@ -131,6 +140,7 @@ function loadTransactions(){
         console.log(resultData.length)
         if(resultData.length > 0){
             var table = document.getElementById("allTransUP");
+            table.innerHTML="";
             for(var j=0; j<1;j++){
                 var row = table.insertRow(j);
                 var cell = row.insertCell(0);
@@ -147,6 +157,7 @@ function loadTransactions(){
             }
 
             var table = document.getElementById("tbltrans");
+            table.innerHTML="";
             for(var i=0; i<resultData.length; i++){
                 var row = table.insertRow(i);
 
@@ -166,6 +177,7 @@ function loadTransactions(){
                 var cell4 = row.insertCell(0+3);
                 cell4.innerHTML ="+"+resultData[i][5];
             }
+            createChart1();
         }
         else{
             $("#allTrans").text("You don't have any transactions on this account.");
@@ -365,7 +377,7 @@ function loadTransactions2(){
         console.log(resultData.length)
         if(resultData.length > 0){
             var table = document.getElementById("tbltrans");
-            for(var i=1; i<resultData.length; i++){
+            for(var i=0; i<resultData.length; i++){
                 var row = table.insertRow(i);
 
                 var cell1 = row.insertCell(0);
@@ -385,7 +397,7 @@ function loadTransactions2(){
                 cell4.innerHTML ="-"+resultData[i][5];
 
             }
-            createChart();
+            createChart2();
         }
         else{
             $("#allTrans").text("You don't have any transactions on this account.");
@@ -409,6 +421,7 @@ function sendingMoney(){
         console.log("peniaze poslane");
         var obj = JSON.stringify(resultData);
         console.log(obj);
+        loadAccountes();
          if (obj.status = "OK"){
             clearInputsPay();
             $("#errPay").text("Your payment was successful.");
@@ -423,44 +436,94 @@ function sendingMoney(){
   });
 }
 
-function createChart(){
+function createChart1(){
      console.log("vytvara sa chart");
      console.log(transactions1);
-     console.log(transactions2);
      var chart = document.getElementById("expenses").getContext('2d');
      var expense = [];
-     var income = [];
+     var transDate = [];
 
-      for(var i=0; i<transactions2.length;i++){
-        swap_expense = transactions2[i][5];
+      for(var i=0; i<transactions1.length;i++){
+        swap_expense = transactions1[i][5];
+        swap_transDate = (transactions1[i][4]);
+
         expense.push(swap_expense);
+
+        var d = new Date(swap_transDate);
+        transDate.push(d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+("0" + d.getDate()).slice(-2));
     }
-    for(var j=0; j<transactions1.length;j++){
-        swap_income = transactions1[j][5];
-        income.push(swap_income);
-    }
-    console.log("incomes");
-    console.log(income);
     console.log("expenses");
     console.log(expense);
-
+    console.log("datumy");
+    console.log(transDate);
 
     let barChart = new Chart(chart, {
         type: 'bar',
         data:{
-            labels: ["January", "February", "March","April","May","June","July","August","September","October","November","December"],
+            labels: transDate,
             datasets: [{
-                label: 'Income',
-                data: income,
+                label: 'Incomes',
+                data: expense,
                 backgroundColor: '#8ed18e',
                 borderWidth: 0,
-            },{
+            }]
+        },
+        options: {
+
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+
+}
+
+function createChart2(){
+     console.log("vytvara sa chart");
+     console.log(transactions2);
+     var chart = document.getElementById("incomes").getContext('2d');
+     var income = [];
+     var transDate = [];
+
+    for(var j=0; j<transactions2.length;j++){
+        swap_income = transactions2[j][5];
+        swap_transDate = (transactions2[j][4]);
+
+        income.push(swap_income);
+
+        var d = new Date(swap_transDate);
+        transDate.push(d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+("0" + d.getDate()).slice(-2));
+    }
+    console.log("incomes");
+    console.log(income);
+    console.log("datumy");
+    console.log(transDate);
+
+    let barChart = new Chart(chart, {
+        type: 'bar',
+        data:{
+            labels: transDate,
+            datasets: [{
                 label: 'Expenses',
-                data: expense,
+                data: income,
                 backgroundColor: '#f48484',
                 borderWidth: 0,
             }]
         },
+        options: {
+
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
     });
 
 }

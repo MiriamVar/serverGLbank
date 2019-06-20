@@ -85,7 +85,6 @@ class Databaza(object):
             db_info = connection_object.get_server_info()
             print("Connected to MySQL database using connection pool ... MySQL Server version on ",db_info)
             cur = connection_object.cursor()
-            # cur1 = self.__getDb__().cursor()
             queryClient = "SELECT * FROM client " \
                           "inner join loginclient " \
                           "on client.id=loginclient.idc where login = %s and password = %s;"
